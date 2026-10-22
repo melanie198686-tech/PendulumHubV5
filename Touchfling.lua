@@ -18,6 +18,7 @@ local Frame_4 = Instance.new("Frame")
 local TextLabel3 = Instance.new("TextLabel")
 local LogsLabel = Instance.new("TextLabel")
 local HideButton = Instance.new("TextButton")
+local RainbowButton = Instance.new("TextButton")
 
 local CornerFrame = Instance.new("UICorner")
 local CornerHeader = Instance.new("UICorner")
@@ -38,7 +39,7 @@ Frame.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
 Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame.BorderSizePixel = 0
 Frame.Position = UDim2.new(0.388539821, 0, 0.427821517, 0)
-Frame.Size = UDim2.new(0, 158, 0, 160)
+Frame.Size = UDim2.new(0, 158, 0, 205)
 
 CornerFrame.CornerRadius = UDim.new(0, 8)
 CornerFrame.Parent = Frame
@@ -114,6 +115,16 @@ TextButton2.Font = Enum.Font.SourceSansItalic
 TextButton2.Text = "TP OFF"
 TextButton2.TextColor3 = Color3.fromRGB(0, 0, 0)
 TextButton2.TextSize = 20.000
+
+RainbowButton.Parent = Frame
+RainbowButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+RainbowButton.BorderSizePixel = 0
+RainbowButton.Position = UDim2.new(0.113924049, 0, 0.79, 0)
+RainbowButton.Size = UDim2.new(0, 121, 0, 30)
+RainbowButton.Font = Enum.Font.SourceSansItalic
+RainbowButton.Text = "Rainbow OFF"
+RainbowButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+RainbowButton.TextSize = 18
 
 Frame3.Parent = Frame
 Frame3.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
@@ -370,6 +381,126 @@ local function TP_fake_script()
 end
 coroutine.wrap(TP_fake_script)()
 
+
+-- Rainbow follower: torso-sized marker 7 studs below the local player.
+-- An XRay BoxHandleAdornment provides a through-walls visual even if Highlight is occluded.
+local function RAINBOW_FOLLOWER_script()
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+    local lp = Players.LocalPlayer
+    local button = RainbowButton
+    -- Start enabled so the marker appears as soon as the script runs.
+    local enabled = true
+    local marker = nil
+    local highlight = nil
+    local xrayAdornment = nil
+    local connection = nil
+
+    local function removeMarker()
+        if connection then
+            connection:Disconnect()
+            connection = nil
+        end
+        if highlight then
+            highlight:Destroy()
+            highlight = nil
+        end
+        if xrayAdornment then
+            xrayAdornment:Destroy()
+            xrayAdornment = nil
+        end
+        if marker then
+            marker:Destroy()
+            marker = nil
+        end
+    end
+
+    local function makeMarker()
+        removeMarker()
+        marker = Instance.new("Part")
+        marker.Name = "RainbowFollowerMarker"
+        marker.Anchored = true
+        marker.CanCollide = false
+        marker.CanTouch = false
+        marker.CanQuery = false
+        marker.Material = Enum.Material.SmoothPlastic
+        marker.CastShadow = false
+        -- Make the actual part faint, so its color is visible without looking solid.
+        marker.Transparency = 0.72
+        marker.Size = Vector3.new(2, 2, 1)
+        marker.Parent = workspace
+
+        -- Keep the regular highlight for a soft tint and a clear rainbow outline.
+        highlight = Instance.new("Highlight")
+        highlight.Name = "RainbowFollowerHighlight"
+        highlight.Adornee = marker
+        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+        highlight.Enabled = true
+        highlight.FillTransparency = 0.88
+        highlight.OutlineTransparency = 0.12
+        highlight.Parent = workspace
+
+        -- Use a separate X-ray adornment as the through-walls visual fallback.
+        xrayAdornment = Instance.new("BoxHandleAdornment")
+        xrayAdornment.Name = "RainbowFollowerXRay"
+        xrayAdornment.Adornee = marker
+        xrayAdornment.Size = marker.Size
+        xrayAdornment.Transparency = 0.68
+        xrayAdornment.AlwaysOnTop = true
+        xrayAdornment.ZIndex = 5
+        xrayAdornment.Shading = Enum.AdornShading.XRay
+        xrayAdornment.Parent = workspace
+
+        connection = RunService.RenderStepped:Connect(function()
+            if not enabled or not marker then return end
+            local character = lp.Character
+            local root = character and character:FindFirstChild("HumanoidRootPart")
+            local torso = character and (character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso"))
+            if root then
+                if torso and torso:IsA("BasePart") then
+                    marker.Size = torso.Size
+                else
+                    marker.Size = Vector3.new(2, 2, 1)
+                end
+                -- Center the marker exactly 7 studs below the HumanoidRootPart.
+                marker.CFrame = CFrame.new(root.Position - Vector3.new(0, 7, 0))
+                local hue = (os.clock() * 0.25) % 1
+                local rainbow = Color3.fromHSV(hue, 1, 1)
+                marker.Color = rainbow
+                if highlight then
+                    highlight.FillColor = rainbow
+                    highlight.OutlineColor = Color3.fromHSV((hue + 0.15) % 1, 1, 1)
+                end
+                if xrayAdornment then
+                    xrayAdornment.Size = marker.Size
+                    xrayAdornment.Color3 = rainbow
+                end
+            end
+        end)
+    end
+
+    button.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        button.Text = enabled and "Rainbow ON" or "Rainbow OFF"
+        if enabled then
+            makeMarker()
+        else
+            removeMarker()
+        end
+    end)
+
+    lp.CharacterAdded:Connect(function()
+        if enabled then
+            task.defer(makeMarker)
+        end
+    end)
+
+    -- Automatically create the marker on script execution; the button can toggle it off.
+    button.Text = "Rainbow ON"
+    makeMarker()
+end
+coroutine.wrap(RAINBOW_FOLLOWER_script)()
+
 local function CHANGELOG_fake_script()
 	local script = Instance.new('LocalScript', ImageButton)
 	local TweenService = game:GetService("TweenService")
@@ -427,7 +558,7 @@ local stateConnection = nil
 
 pcall(function()
     StarterGui:SetCore("SendNotification", {
-        Title = "system anti fling loaded (The use of AI is definitely 😭💀)",
+        Title = "system anti fling loaded",
         Text = "anti fling has active (Deobfuscation by 118_W (6xow in discord)",
         Duration = 3.5
     })
@@ -443,3 +574,4 @@ local function cleanup()
         stateConnection = nil
     end
 end
+
