@@ -58,7 +58,7 @@ do -- UI
 do -- ScriptsTab Buttons
 	ScriptsTab:NewButton("Sonic", "All other versions don't fling except this one.", function()
 		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
-		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/Fighter/refs/heads/main/Fighter.lua"))()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Sonic.lua"))()
 	end)
 
 	ScriptsTab:NewButton("FE Rune", "A flying men", function()
