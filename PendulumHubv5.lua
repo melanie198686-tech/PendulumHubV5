@@ -106,6 +106,11 @@ do -- ScriptsTab Buttons
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Minigun.lua"))()
 	end)
 
+	ScriptsTab:NewButton("Grappler", "So uh good to escape.", function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Grappler.lua"))()
+	end)
+
 	ScriptsTab:NewButton("Darth Vadar", "for the star wars fans.", function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/darthvadar.lua"))()
