@@ -76,6 +76,11 @@ do -- ScriptsTab Buttons
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/FEPen.lua"))()
 	end)
 
+	ScriptsTab:NewButton("Video Powers", "I expected something better duh.", function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Video%20Powers.lua"))()
+	end)
+
 	ScriptsTab:NewButton("The Pacifist", "Pretty lame but its cool.", function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/The%20Pacifist.lua"))()
