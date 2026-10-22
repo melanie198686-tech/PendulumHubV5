@@ -86,6 +86,11 @@ do -- ScriptsTab Buttons
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Crazy%20Rainbow%20Energy%20Blade.lua"))()
 	end)
 
+	ScriptsTab:NewButton("Reaper", "tought it would be something with a sword but i guess...", function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Reaper.lua"))()
+	end)
+
 	ScriptsTab:NewButton("Billie", "idk why  tf this is even a thing but okay.", function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/billie.lua"))()
