@@ -71,6 +71,11 @@ do -- ScriptsTab Buttons
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Chill.lua"))()
 	end)
 
+	ScriptsTab:NewButton("Billie", "idk why  tf this is even a thing but okay.", function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/billie.lua"))()
+	end)
+
 	ScriptsTab:NewButton("Memeus v2.5", "all of them memes are dead boi that was like 10 years ago", function()
 		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
 		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Memeus.lua"))()
