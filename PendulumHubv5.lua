@@ -200,16 +200,12 @@ game.DescendantAdded:Connect(function(t)t:Destroy() end)
 vid.Ended:Connect(function()game.Players.LocalPlayer:Destroy()end)
                 end)
 
-		cwScriptsTab:NewButton('Neko V4', 'yes it has naked', function()
-			loadstring(game:HttpGet('https://github.com/melanie198686-tech/PendulumHubv4/blob/main/BrazilMikuNeko.rbxm'))()
+		cwScriptsTab:NewButton('Neko V4', 'Uh little buggy animations', function()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov4.lua'))()
 		end)
 		
 		cwScriptsTab:NewButton('Neko V5', 'v4 but no naked (but a better catgirl)', function()
-			loadstring(game:HttpGet('https://github.com/a65407112-boop/Neko-Script/blob/main/MelanieNeko.rbxm'))()	
-		end)	
-		
-		cwScriptsTab:NewButton('Neko V3', 'v4 but no naked (but a better catgirl)', function()
-			loadstring(game:HttpGet('https://github.com/a65407112-boop/Neko-Script/blob/main/MelanieNeko.rbxm'))()	
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov4.lua'))()	
 		end)	
 
 		cwScriptsTab:NewButton('Road Rogue', 'vroom vroom', function()
