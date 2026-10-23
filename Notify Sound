@@ -1,0 +1,9 @@
+local SoundService = game:GetService("SoundService")
+
+local sound = Instance.new("Sound")
+sound.Name = "FearsToFantomNotification"
+sound.SoundId = "rbxassetid://139746569667955"
+sound.Volume = 5
+sound.Parent = SoundService
+
+sound:Play()
