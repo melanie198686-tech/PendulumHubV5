@@ -1,0 +1,1309 @@
+--[[
+	Advanced Neko Script V.2 (FULLY FIXED)
+ oi oi oi bakkaa fixed by feyz
+]]
+
+-- FIX: Mock getgenv if running in Studio or without an executor
+if not getgenv then getgenv = function() return _G end end
+
+-- FIX: Safely try to run the reanimate function
+if getgenv()._reanimate then pcall(getgenv()._reanimate) end
+
+local Players    = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenSvc   = game:GetService("TweenService")
+local Debris     = game:GetService("Debris")
+
+local Player     = Players.LocalPlayer
+local Character  = Player.Character or Player.CharacterAdded:Wait()
+local Humanoid   = Character:WaitForChild("Humanoid")
+
+-- R6 Check
+local Torso = Character:FindFirstChild("Torso")
+if not Torso then warn("[Neko] R6 character required (no Torso found)"); return end
+local Head        = Character:WaitForChild("Head")
+local LeftArm     = Character:WaitForChild("Left Arm")
+local LeftLeg     = Character:FindFirstChild("Left Leg")
+local RightArm    = Character:WaitForChild("Right Arm")
+local RightLeg    = Character:FindFirstChild("Right Leg")
+local RootPart    = Character:WaitForChild("HumanoidRootPart")
+
+-- FIX: Ultra-Robust Fallback for workspace.non
+local non = workspace:FindFirstChild("non")
+if not non then
+	warn("[Neko] workspace.non missing! Creating a fallback dummy rig...")
+	
+	local function buildDummy()
+		local model = Instance.new("Model")
+		model.Name = "non"
+		
+		local parts = {"HumanoidRootPart", "Head", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"}
+		for _, pName in ipairs(parts) do
+			local p = Instance.new("Part", model)
+			p.Name = pName
+			p.Size = (pName == "HumanoidRootPart" or pName == "Torso") and Vector3.new(2,2,1) or Vector3.new(1,2,1)
+			if pName == "Head" then p.Size = Vector3.new(2,1,1) end
+			p.Transparency = 1
+			p.CanCollide = false
+			p.Anchored = false
+			p.Massless = true
+		end
+		
+		local humanoid = Instance.new("Humanoid", model)
+		humanoid.RigType = Enum.HumanoidRigType.R6
+		
+		model.PrimaryPart = model.HumanoidRootPart
+		if Character and Character:FindFirstChild("HumanoidRootPart") then
+			model:PivotTo(Character.HumanoidRootPart.CFrame)
+		end
+		
+		-- Weld them together
+		local function w(p0, p1, c0)
+			local w = Instance.new("Weld", p0)
+			w.Part0, w.Part1, w.C0 = p0, p1, c0
+		end
+		w(model.HumanoidRootPart, model.Torso, CFrame.new(0,0,0))
+		w(model.Torso, model.Head, CFrame.new(0,1.5,0))
+		w(model.Torso, model["Left Arm"], CFrame.new(-1.5,0.5,0))
+		w(model.Torso, model["Right Arm"], CFrame.new(1.5,0.5,0))
+		w(model.Torso, model["Left Leg"], CFrame.new(-0.5,-1.5,0))
+		w(model.Torso, model["Right Leg"], CFrame.new(0.5,-1.5,0))
+		
+		return model
+	end
+
+	local success, cloned = pcall(function()
+		local char = Player.Character
+		if not char then return nil end
+		char.Archivable = true
+		for _, v in ipairs(char:GetDescendants()) do v.Archivable = true end
+		local c = char:Clone()
+		c.Name = "non"
+		for _, v in ipairs(c:GetDescendants()) do
+			if v:IsA("BasePart") then v.Transparency = 1; v.CanCollide = false end
+			if v:IsA("Script") or v:IsA("LocalScript") then v:Destroy() end
+		end
+		return c
+	end)
+
+	if success and cloned then
+		cloned.Parent = workspace
+		non = cloned
+	else
+		warn("[Neko] Clone failed. Creating manual invisible rig...")
+		non = buildDummy()
+		non.Parent = workspace
+	end
+end
+
+-- FIX: Asset Fallback for Studio
+local folder
+local ok, err = pcall(function() folder = game:GetObjects('rbxassetid://10107385072')[1] end)
+if not ok or not folder then 
+	warn("[Neko] Failed to load external asset (GetObjects restricted). Creating dummy assets...") 
+	folder = Instance.new("Folder")
+	folder.Name = "DummyAsset"
+	
+	local extras = Instance.new("Folder")
+	extras.Name = "Extras"
+	extras.Parent = folder
+	
+	local dummyChar = Instance.new("Model")
+	dummyChar.Name = "DefaultCharacter6"
+	dummyChar.Parent = folder
+end
+folder.Parent = non
+
+local falsechar = folder:FindFirstChild('DefaultCharacter6')
+if not falsechar then 
+	warn("[Neko] DefaultCharacter6 missing from asset") 
+else
+	falsechar:PivotTo(non.HumanoidRootPart.CFrame)
+end
+
+local limbs = {"Head","Torso","Left Leg","Right Leg","Left Arm","Right Arm"}
+for _,v in ipairs(non:GetChildren()) do 
+	if v.Name == 'CharacterMesh' then v:Destroy() end
+end
+
+local nonHead = non:FindFirstChild("Head")
+if nonHead then
+	local dec = nonHead:FindFirstChildOfClass('Decal')
+	if dec then dec.Transparency = 1 end
+end
+
+local RealRig = getgenv().RealRig
+if RealRig then
+	local rh = RealRig:FindFirstChild("Head")
+	if rh then
+		local dec = rh:FindFirstChildOfClass('Decal')
+		if dec then dec.Transparency = 1 end
+	end
+end
+
+for _,v in ipairs(Player.Character:GetDescendants()) do
+	if v:IsA('Accessory') and v:FindFirstChild("Handle") then v.Handle.Transparency = 1 end
+end
+if RealRig then
+	for _,v in ipairs(RealRig:GetChildren()) do
+		if v:IsA('BasePart') then v.Transparency = 1 end
+	end
+end
+
+if falsechar then
+	for _,v in ipairs(falsechar:GetChildren()) do
+		if table.find(limbs, v.Name) then
+			for _,t in ipairs(v:GetChildren()) do
+				if v.Name == 'Head' then
+					for _,c in ipairs(v:GetChildren()) do
+						if c.Name == 'BTWeld' and nonHead then c.Part0 = nonHead end
+					end
+				elseif v.Name == 'Left Arm' then
+					local la = non:FindFirstChild('Left Arm')
+					for _,c in ipairs(v:GetChildren()) do
+						if c.Name == 'BTWeld' and c.Part1 and c.Part1.Name == 'Left Arm' and la then c.Part1 = la end
+					end
+				elseif v.Name == 'Right Arm' then
+					local ra = non:FindFirstChild('Right Arm')
+					local selfra = v:FindFirstChild('Right Arm')
+					if selfra and ra then
+						local btw = selfra:FindFirstChild('BTWeld')
+						if btw then btw.Part0 = ra end
+					end
+				elseif v.Name == 'Left Leg' then
+					local ll = non:FindFirstChild('Left Leg')
+					local btw = v:FindFirstChild('BTWeld')
+					if btw and ll then btw.Part0 = ll end
+				elseif v.Name == 'Right Leg' then
+					local rl = non:FindFirstChild('Right Leg')
+					local btw = v:FindFirstChild('BTWeld')
+					if btw and rl then btw.Part0 = rl end
+				elseif v.Name == 'Torso' then
+					local tor = non:FindFirstChild('Torso')
+					local btw = v:FindFirstChild('BTWeld')
+					if btw and tor then btw.Part0 = tor end
+					local innerTorso = v:FindFirstChild('Torso')
+					if innerTorso and innerTorso:FindFirstChild('Butt') then
+						local rb = innerTorso.Butt:FindFirstChild('Right Butt')
+						if rb then
+							for _,c in ipairs(rb:GetChildren()) do
+								if c.Part1 and c.Part1.Name == 'Torso' and tor then c.Part1 = tor end
+							end
+						end
+					end
+				end
+				if not t:IsA('Motor6D') and not t:IsA('Attachment') then
+					local target = non:FindFirstChild(v.Name)
+					if target then t.Parent = target end
+				end
+			end
+		end
+	end
+end
+
+do
+	local raParent = non:FindFirstChild('Right Arm')
+	local raChild = raParent and raParent:FindFirstChild('Right Arm')
+	if raParent and raChild then
+		local rarmweld = Instance.new('Weld', raChild)
+		rarmweld.Part0 = raChild
+		rarmweld.Part1 = raParent
+		rarmweld.C0 = CFrame.new(0,0,0)
+		rarmweld.Name = 'BTWeld'
+	end
+end
+
+if falsechar and falsechar:FindFirstChild("HumanoidRootPart") then
+	falsechar.HumanoidRootPart:Destroy()
+end
+
+local RbxUtility
+do
+	local s, r = pcall(function()
+		return loadstring(game:HttpGet('https://raw.githubusercontent.com/Roblox/Core-Scripts/master/CoreScriptsRoot/Libraries/RbxUtility.lua'))()
+	end)
+	RbxUtility = s and r or nil
+end
+local Create
+if RbxUtility and RbxUtility.Create then
+	Create = RbxUtility.Create
+else
+	Create = function(class) return function(props)
+		local inst = Instance.new(class)
+		for k, v in pairs(props or {}) do pcall(function() inst[k] = v end) end
+		return inst
+	end end
+end
+
+local ZTfade, ZT = false, false
+local agresive = false
+local Target = Vector3.new()
+local Anim = "Idle"
+local inairvel = 0
+local WalkAnimStep = 0
+local sine = 0
+local change = 1
+local Animstep = 0
+local WalkAnimMove = 0.05
+local Combo = 0
+local attack = false
+local isruning = false
+local function GainCharge() end
+local function Attack2() end
+local function Attack3() end
+local function Attack4() end
+local function Attack5() end
+
+local RJ   = RootPart:FindFirstChild("RootJoint")
+local Neck = Torso:FindFirstChild("Neck")
+local MAINRUINCOLOR = BrickColor.new("Lily white")
+
+local RootCF = CFrame.fromEulerAnglesXYZ(-1.57, 0, 3.14)
+local NeckCF = CFrame.new(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 1, 0)
+
+local forWFB, forWRL = 0, 0
+
+local Effects = Instance.new("Folder", Character)
+Effects.Name = "Effects"
+
+local it, vt, cf, euler, angles, cn = Instance.new, Vector3.new, CFrame.new, CFrame.fromEulerAnglesXYZ, CFrame.Angles, CFrame.new
+local mr = math.rad
+local mememode = false
+local IT, CF, VT, RAD = Instance.new, CFrame.new, Vector3.new, math.rad
+local C3, UD2, BRICKC = Color3.new, UDim2.new, BrickColor.new
+local ANGLES, EULER = CFrame.Angles, CFrame.fromEulerAnglesXYZ
+local COS, ACOS, SIN, ASIN, ABS = math.cos, math.acos, math.sin, math.asin, math.abs
+local MRANDOM, FLOOR = math.random, math.floor
+
+local lastid = "http://www.roblox.com/asset/?id=876316256"
+local s2 = it("Sound", Character)
+local CurId = 1
+s2.EmitterSize = 30
+local s2c = s2:Clone()
+
+local playsong = true
+s2.SoundId = lastid
+if playsong then s2:Play() else s2:Stop() end
+
+local crosshair = Instance.new("BillboardGui", Character)
+crosshair.Size = UDim2.new(10,0,10,0)
+crosshair.Enabled = false
+local imgl = Instance.new("ImageLabel", crosshair)
+imgl.Position = UDim2.new(0,0,0,0)
+imgl.Size = UDim2.new(1,0,1,0)
+imgl.Image = "rbxassetid://578065407"
+imgl.BackgroundTransparency = 1
+imgl.ImageTransparency = 0.7
+imgl.ImageColor3 = Color3.new(1,1,1)
+crosshair.StudsOffset = Vector3.new(0,0,-1)
+
+local GROWL, ROAR, ECHOBLAST, CAST = 1544355717, 528589382, 376976397, 459523898
+local ALCHEMY, BUILDUP, BIGBUILDUP = 424195979, 698824317, 874376217
+local IMPACT, LARGE_EXPLOSION, TURNUP = 231917744, 168513088, 299058146
+
+if Character:FindFirstChild("Animate") then Character.Animate:Destroy() end
+
+local function RemoveOutlines(part)
+	part.TopSurface, part.BottomSurface, part.LeftSurface, part.RightSurface,
+		part.FrontSurface, part.BackSurface = 10,10,10,10,10,10
+end
+
+local function weld(parent, part0, part1, c0)
+	local w = it("Weld")
+	w.Parent, w.Part0, w.Part1, w.C0 = parent, part0, part1, c0
+	return w
+end
+
+local function joint(parent, part0, part1, c0)
+	local w = it("Motor6D")
+	w.Parent, w.Part0, w.Part1, w.C0 = parent, part0, part1, c0
+	return w
+end
+
+local function rayCast(Pos, Dir, Max, Ignore)
+	return workspace:FindPartOnRay(Ray.new(Pos, Dir.unit * (Max or 999.999)), Ignore)
+end
+
+local function SetTween(SPart, CFr, MoveStyle2, outorin2, AnimTime)
+	if not SPart then return end
+	local MoveStyle = Enum.EasingStyle[MoveStyle2]
+	local outorin = Enum.EasingDirection[outorin2]
+	local dahspeed = 1
+	if attack and mememode then dahspeed = 5 end
+	if SPart.Name == "Bullet" then dahspeed = 1 end
+	local info = TweenInfo.new(AnimTime/dahspeed, MoveStyle, outorin, 0, false, 0)
+	TweenSvc:Create(SPart, info, CFr):Play()
+end
+
+local function GatherAllInstances(Parent, ig)
+	local Instances = {}
+	local function rec(p, ignore)
+		for _, v in ipairs(p:GetChildren()) do
+			if v ~= ignore then
+				rec(v, ignore)
+				table.insert(Instances, v)
+			end
+		end
+	end
+	rec(Parent, ig)
+	return Instances
+end
+
+local function safeClone(parent, name)
+	if not parent then return nil end
+	local v = parent:FindFirstChild(name)
+	if not v then return nil end
+	local okc, c = pcall(function() return v:Clone() end)
+	return okc and c or nil
+end
+
+local EffectPack = nil
+do
+	local extras = folder:FindFirstChild("Extras")
+	if extras then
+		EffectPack = extras:Clone()
+		extras:Destroy()
+	else
+		warn("[Neko] folder.Extras missing — effects disabled")
+		EffectPack = Instance.new("Folder")
+	end
+end
+
+local function so(id, par, vol, pit)
+	local sound = it("Sound")
+	sound.Volume = vol
+	sound.Pitch = pit or 1
+	sound.SoundId = "http://www.roblox.com/asset/?id="..tostring(id)
+	sound.Parent = par or workspace
+	sound:Play()
+	Debris:AddItem(sound, 6)
+end
+
+local function CreatePart(Parent, Material, Reflectance, Transparency, BColor, Name, Size)
+	local Part = Create("Part")({
+		Parent = Parent, Reflectance = Reflectance, Transparency = Transparency,
+		CanCollide = false, Locked = true,
+		BrickColor = BrickColor.new(tostring(BColor)), Name = Name,
+		Size = Size, Material = Material,
+	})
+	RemoveOutlines(Part)
+	return Part
+end
+
+local function CreatePart2(FORMFACTOR, PARENT, MATERIAL, REFLECTANCE, TRANSPARENCY, BRICKCOLOR, NAME, SIZE, ANCHOR)
+	local P = IT("Part")
+	P.Reflectance = REFLECTANCE
+	P.Transparency = TRANSPARENCY
+	P.CanCollide = false
+	P.Locked = true
+	P.Anchored = ANCHOR ~= false
+	P.BrickColor = BRICKC(tostring(BRICKCOLOR))
+	P.Name = NAME
+	P.Size = SIZE
+	P.Position = Torso.Position
+	P.Material = MATERIAL
+	P:BreakJoints()
+	P.Parent = PARENT
+	return P
+end
+
+local function CreateMesh2(MESH, PARENT, MESHTYPE, MESHID, TEXTUREID, SCALE, OFFSET)
+	local M = IT(MESH)
+	if MESH == "SpecialMesh" then
+		M.MeshType = MESHTYPE
+		if MESHID ~= "nil" and MESHID ~= "" then M.MeshId = "http://www.roblox.com/asset/?id="..MESHID end
+		if TEXTUREID ~= "nil" and TEXTUREID ~= "" then M.TextureId = "http://www.roblox.com/asset/?id="..TEXTUREID end
+	end
+	M.Offset = OFFSET or VT(0,0,0)
+	M.Scale = SCALE
+	M.Parent = PARENT
+	return M
+end
+
+local function CreateSound2(ID, PARENT, VOLUME, PITCH, DOESLOOP)
+	local snd = it("Sound")
+	snd.Parent = PARENT
+	snd.Volume = VOLUME
+	snd.Pitch = PITCH
+	snd.SoundId = "http://www.roblox.com/asset/?id="..ID
+	snd:Play()
+	if DOESLOOP then snd.Looped = true
+	else
+		task.spawn(function() repeat task.wait(1) until not snd.Playing; snd:Destroy() end)
+	end
+	return snd
+end
+
+local function WACKYEFFECT(T)
+	local TYPE     = T.EffectType or "Sphere"
+	local SIZE     = T.Size or VT(1,1,1)
+	local ENDSIZE  = T.Size2 or VT(0,0,0)
+	local TRANS    = T.Transparency or 0
+	local ENDTRANS = T.Transparency2 or 1
+	local CFRAME   = T.CFrame or Torso.CFrame
+	local MOVEDIR  = T.MoveToPos
+	local ROT1,ROT2,ROT3 = T.RotationX or 0, T.RotationY or 0, T.RotationZ or 0
+	local MAT      = T.Material or "Neon"
+	local COLOR    = T.Color or C3(1,1,1)
+	local TIME     = T.Time or 45
+	local SID, SPITCH, SVOL = T.SoundID, T.SoundPitch, T.SoundVolume
+	local snd = nil
+	if SID and SPITCH and SVOL then snd = CreateSound2(SID, Effects, SVOL, SPITCH, false) end
+	local EFFECT = CreatePart2(3, Effects, MAT, 0, TRANS, BRICKC("Pearl"), "Effect", VT(1,1,1), true)
+	EFFECT.Color = COLOR
+	local MSH
+	if TYPE == "Sphere"   then MSH = CreateMesh2("SpecialMesh", EFFECT, "Sphere", "", "", SIZE, VT())
+	elseif TYPE == "Cylinder" then MSH = CreateMesh2("SpecialMesh", EFFECT, "Cylinder", "", "", SIZE, VT())
+	elseif TYPE == "Block" then MSH = IT("BlockMesh", EFFECT); MSH.Scale = VT(SIZE.X,SIZE.X,SIZE.X)
+	elseif TYPE == "Cube"  then MSH = IT("BlockMesh", EFFECT); MSH.Scale = VT(SIZE.X,SIZE.X,SIZE.X)
+	elseif TYPE == "Wave"  then MSH = CreateMesh2("SpecialMesh", EFFECT, "FileMesh", "20329976", "", SIZE, VT(0,0,-SIZE.X/8))
+	elseif TYPE == "Ring"  then MSH = CreateMesh2("SpecialMesh", EFFECT, "FileMesh", "559831844", "", VT(SIZE.X,SIZE.X,0.1), VT())
+	elseif TYPE == "Slash" then MSH = CreateMesh2("SpecialMesh", EFFECT, "FileMesh", "662586858", "", VT(SIZE.X/10,0,SIZE.X/10), VT())
+	elseif TYPE == "Round Slash" then MSH = CreateMesh2("SpecialMesh", EFFECT, "FileMesh", "662585058", "", VT(SIZE.X/10,0,SIZE.X/10), VT())
+	elseif TYPE == "Swirl" then MSH = CreateMesh2("SpecialMesh", EFFECT, "FileMesh", "1051557", "", SIZE, VT())
+	elseif TYPE == "Skull" then MSH = CreateMesh2("SpecialMesh", EFFECT, "FileMesh", "4770583", "", SIZE, VT())
+	elseif TYPE == "Crystal" then MSH = CreateMesh2("SpecialMesh", EFFECT, "FileMesh", "9756362", "", SIZE, VT())
+	elseif TYPE == "Crown" then MSH = CreateMesh2("SpecialMesh", EFFECT, "FileMesh", "173770780", "", SIZE, VT())
+	end
+	if not MSH then EFFECT:Destroy(); return end
+	EFFECT.CFrame = CFRAME
+	SetTween(EFFECT, {Transparency = ENDTRANS}, "Quad", "InOut", TIME/60)
+	SetTween(MSH, {Scale = ENDSIZE}, "Quad", "InOut", TIME/60)
+	if MOVEDIR then
+		SetTween(EFFECT, {CFrame = CF(MOVEDIR)}, "Quad", "InOut", TIME/60)
+	end
+	Debris:AddItem(EFFECT, 15)
+	if snd then snd.Stopped:Connect(function() if EFFECT then EFFECT:Destroy() end end)
+	else EFFECT:Destroy() end
+end
+
+local ShowDamage
+ShowDamage = function(Pos, Text, Time, Color)
+	local Rate = 0.033333333333333
+	Pos = Pos or Vector3.new(0,0,0)
+	Text = Text or ""
+	Time = Time or 2
+	Color = Color or Color3.new(1, 0.545098, 0.552941)
+
+	local EffectPart = CreatePart(workspace, "SmoothPlastic", 0, 1, BrickColor.new(Color), "Effect", Vector3.new(0,0,0))
+	EffectPart.Anchored = true
+	local BBG = Create("BillboardGui")({Size = UDim2.new(2,0,2,0), Adornee = EffectPart, Parent = EffectPart})
+	local Txt = Create("TextLabel")({
+		BackgroundTransparency = 1, Size = UDim2.new(1,0,1,0), Text = tostring(Text),
+		TextColor3 = Color, TextScaled = true, Font = Enum.Font.SourceSansBold, Parent = BBG
+	})
+	Txt.TextTransparency = 1
+	Debris:AddItem(EffectPart, Time + 0.1)
+	EffectPart.Parent = workspace
+
+	task.spawn(function()
+		local Frames = Time / Rate
+		EffectPart.CFrame = CFrame.new(Pos)
+		task.wait()
+		Txt.TextTransparency = 0
+		SetTween(Txt, {TextTransparency = 1}, "Quad", "In", Frames/60)
+		SetTween(Txt, {Rotation = math.random(-25,25)}, "Elastic", "InOut", Frames/60)
+		SetTween(Txt, {TextColor3 = Color3.new(1,0,0)}, "Elastic", "InOut", Frames/60)
+
+		local offset = Vector3.new(math.random(-5,5), math.random(1,5), math.random(-5,5))
+		SetTween(EffectPart, {CFrame = CFrame.new(Pos + offset)}, "Quad", "InOut", Frames/60)
+
+		task.wait(Frames/60)
+		if EffectPart and EffectPart.Parent then EffectPart:Destroy() end
+	end)
+end
+
+local function Damagefunc(Part, hit, minim, maxim, knockback, Type, Property, Delay, HitSound, HitPitch)
+	if hit.Parent == nil then return end
+	local h = hit.Parent:FindFirstChildOfClass("Humanoid")
+	if not h then return end
+	if h.Health < 0.001 then return end
+	if hit.Parent:FindFirstChild("Fly away") then return end
+	if hit.Parent:FindFirstChild("DebounceHit") and hit.Parent.DebounceHit.Value then return end
+
+	local c = Create("ObjectValue")({Name = "creator", Value = Player, Parent = h})
+	Debris:AddItem(c, 0.5)
+
+	if HitSound and HitPitch then so(HitSound, hit, 1, HitPitch) end
+
+	local Damage = math.random(minim, maxim)
+	local blocked = false
+	local block = hit.Parent:FindFirstChild("Block")
+	if block and block.ClassName == "IntValue" and block.Value > 0 then
+		blocked = true
+		block.Value = block.Value - 1
+	end
+	local amount = blocked and (Damage/2) or Damage
+	ShowDamage(Part.CFrame * CFrame.new(0, 0, Part.Size.Z/2).p + Vector3.new(0, 1.5, 0), -amount, 1.5, Color3.new(0,0,0))
+
+	local debounce = Create("BoolValue")({Name = "DebounceHit", Parent = hit.Parent, Value = true})
+	Debris:AddItem(debounce, Delay or 0.1)
+end
+
+local function MagniDamage(Part, magni, mindam, maxdam, knock, Type2)
+	local Type = mememode and "Instakill" or Type2
+	if Type2 == "NormalKnockdown" then Type = "Knockdown" end
+	for _, c in ipairs(workspace:GetChildren()) do
+		local hum = c:FindFirstChild("Humanoid")
+		if hum then
+			local head = c:FindFirstChild("Head")
+			if head and c.Name ~= Player.Name then
+				if (head.Position - Part.Position).Magnitude <= magni then
+					Damagefunc(Part, head, mindam, maxdam, knock, Type, RootPart, 0.1, "851453784", 1.2)
+				end
+			end
+		end
+	end
+end
+
+local function CFMagniDamage(HTCF, magni, mindam, maxdam, knock, Type)
+	local DGP = Instance.new("Part")
+	DGP.Parent = Character
+	DGP.Size = Vector3.new(0.05,0.05,0.05)
+	DGP.Transparency = 1
+	DGP.CanCollide = false
+	DGP.Anchored = true
+	RemoveOutlines(DGP)
+	DGP.CFrame = HTCF
+	MagniDamage(DGP, magni, mindam, maxdam, knock, Type)
+	Debris:AddItem(DGP, 0.05)
+end
+
+local RJW = weld(RJ.Parent, RJ.Part0, RJ.Part1, RJ.C0)
+RJW.C1 = RJ.C1; RJW.Name = RJ.Name
+
+local NeckW = weld(Neck.Parent, Neck.Part0, Neck.Part1, Neck.C0)
+NeckW.C1 = Neck.C1; NeckW.Name = Neck.Name
+
+local RW = weld(Torso, Torso, RightArm, cf(0,0,0))
+local LW = weld(Torso, Torso, LeftArm, cf(0,0,0))
+local RH = weld(Torso, Torso, RightLeg, cf(0,0,0))
+local LH = weld(Torso, Torso, LeftLeg, cf(0,0,0))
+RW.C1, LW.C1 = cn(0,0.5,0), cn(0,0.5,0)
+RH.C1, LH.C1 = cn(0,1,0), cn(0,1,0)
+
+local tailw, tailc0 = nil, nil
+local tailPart = Torso:FindFirstChild("Tail")
+if tailPart then
+	tailw = tailPart:FindFirstChild("Weld")
+	if tailw then tailc0 = tailw.C0 end
+end
+
+local hbContainer = Instance.new("Folder", workspace)
+hbContainer.Name = "_NekoHB_"..tostring(tick())
+local ArtificialHB = Instance.new("BindableEvent", hbContainer)
+ArtificialHB.Name = "ArtificialHB"
+
+local Frame_Speed = 1/30
+local frame = Frame_Speed
+local tf, lastframe = 0, tick()
+local allowframeloss, tossremainder = false, false
+
+local hbcon = RunService.Heartbeat:Connect(function(s, _p)
+	tf = tf + s
+	if tf >= frame then
+		if allowframeloss then
+			ArtificialHB:Fire()
+		else
+			for _ = 1, math.floor(tf/frame) do ArtificialHB:Fire() end
+		end
+		lastframe = tick()
+		tf = tossremainder and 0 or (tf - frame * math.floor(tf/frame))
+	end
+end)
+Humanoid.Died:Connect(function() hbcon:Disconnect() end)
+
+local function Swait(NUMBER)
+	if NUMBER == 0 or NUMBER == nil then
+		ArtificialHB.Event:Wait()
+	else
+		for _ = 1, NUMBER do ArtificialHB.Event:Wait() end
+	end
+end
+
+local RCW, LCW
+if EffectPack then
+	local RClaw = safeClone(EffectPack, "Part")
+	if RClaw then
+		RClaw.Parent = Character
+		RClaw.Name = "RightClaw"
+		RCW = weld(RightArm, RightArm, RClaw, cf(0,0,0))
+	end
+	local LClaw = safeClone(EffectPack, "Part")
+	if LClaw then
+		LClaw.Parent = Character
+		LClaw.Name = "LeftClaw"
+		LCW = weld(LeftArm, LeftArm, LClaw, cf(0,0,0))
+	end
+end
+if not RCW then RCW = Instance.new("Weld") end
+if not LCW then LCW = Instance.new("Weld") end
+
+local function WeldAllTo(Part1, Part2, scan, Extra)
+	local EXCF = Part2.CFrame * Extra
+	for _, v3 in ipairs(scan:GetDescendants()) do
+		if v3:IsA("BasePart") then
+			local STW = weld(v3, v3, Part1, EXCF:toObjectSpace(v3.CFrame):inverse())
+			v3.Anchored = false
+			v3.Massless = true
+			v3.CanCollide = false
+			v3.Parent = Part1
+			v3.Locked = true
+		end
+	end
+	Part1.Transparency = 1
+end
+
+local armorFolder = folder:FindFirstChild("Armor")
+if armorFolder then
+	for _, v in ipairs(armorFolder:GetChildren()) do
+		if v:IsA("Model") then
+			local Part1 = Character:FindFirstChild(v.Name)
+			local Part2 = v:FindFirstChild("Handle")
+			if Part1 and Part2 then
+				WeldAllTo(Part1, Part2, v, CFrame.new(0,0,0))
+			end
+		end
+	end
+end
+
+local function tailSafe(c0)
+	if tailw and tailc0 then
+		SetTween(tailw, {C0 = tailc0 * CF(0,0.2,0) * ANGLES(mr(4+2*math.cos(sine/8)), 0, mr(20+20*math.cos(sine/16)))}, "Quad", "In", 0.1)
+	end
+end
+
+local function AT1()
+	attack = true
+	SetTween(RJW,{C0=RootCF*CFrame.new(0,0,0)*angles(math.rad(20),0,math.rad(-40))},"Quad","InOut",0.2)
+	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(0,0,math.rad(40))},"Quad","InOut",0.2)
+	SetTween(RW,{C0=CFrame.new(1.5,0.5,0)*angles(math.rad(30),0,0)},"Quad","InOut",0.2)
+	SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(math.rad(30),0,0)},"Quad","InOut",0.2)
+	SetTween(RH,{C0=CFrame.new(.5,-.6,-.4)*angles(math.rad(-20),0,0)},"Quad","InOut",0.2)
+	SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(20),0,math.rad(20))},"Quad","InOut",0.2)
+	task.wait(0.2)
+	CFMagniDamage(RootPart.CFrame*CF(0,-1,-1), 7, 10, 20, 20, "Normal")
+	SetTween(RJW,{C0=RootCF*CFrame.new(0,-1,0)*angles(math.rad(-40),0,math.rad(40))},"Back","Out",0.2)
+	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(0,0,math.rad(-40))},"Back","Out",0.2)
+	SetTween(RW,{C0=CFrame.new(1.5,0.5,0)*angles(math.rad(-30),0,0)},"Back","Out",0.2)
+	SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(math.rad(-30),0,0)},"Back","Out",0.2)
+	SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(120),0,0)},"Back","Out",0.2)
+	SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(-60),0,math.rad(-20))},"Back","Out",0.2)
+	task.wait(0.2)
+	attack = false
+end
+
+local function AT2()
+	attack = true
+	SetTween(RJW,{C0=RootCF*CFrame.new(0,0,0)*angles(math.rad(-20),0,math.rad(60))},"Quad","InOut",0.2)
+	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(0,0,math.rad(-60))},"Quad","InOut",0.2)
+	SetTween(RW,{C0=CFrame.new(1.5,0.5,0)},"Quad","InOut",0.2)
+	SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(math.rad(90),0,0)},"Quad","InOut",0.2)
+	SetTween(RH,{C0=CFrame.new(.5,-.5,-.4)*angles(math.rad(-20),0,0)},"Quad","InOut",0.2)
+	SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(-20),0,0)},"Quad","InOut",0.2)
+	CFMagniDamage(RootPart.CFrame*CF(0,0,-1), 9, 10, 15, 0, "Normal")
+	task.wait(0.2)
+	SetTween(RJW,{C0=RootCF*CFrame.new(0,-1,0)*angles(0,0,math.rad(-70))},"Back","Out",0.2)
+	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(0,0,math.rad(70))},"Back","Out",0.2)
+	SetTween(RW,{C0=CFrame.new(1.5,0.5,0)},"Back","Out",0.2)
+	SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(0,math.rad(-20),math.rad(-90))},"Back","Out",0.2)
+	SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(20),0,0)},"Back","Out",0.2)
+	SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(-20),0,0)},"Back","Out",0.2)
+	task.wait(0.2)
+	attack = false
+end
+
+local function AT3()
+	attack = true
+	SetTween(RJW,{C0=RootCF*CFrame.new(0,0,0)*angles(math.rad(-20),0,math.rad(120))},"Quad","In",0.2)
+	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(0,0,math.rad(-80))},"Quad","InOut",0.2)
+	SetTween(RW,{C0=CFrame.new(1.5,0.5,0)*angles(math.rad(90),0,math.rad(20))},"Quad","InOut",0.2)
+	SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(math.rad(20),0,0)},"Quad","InOut",0.2)
+	SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(-20),0,0)},"Quad","InOut",0.2)
+	SetTween(LH,{C0=CFrame.new(-.5,-.8,0)*angles(math.rad(20),0,0)},"Quad","InOut",0.2)
+	task.wait(0.2)
+	CFMagniDamage(RootPart.CFrame*CF(-2,-.25,-1), 9, 20, 30, 10, "Knockdown")
+	SetTween(RJW,{C0=RootCF*CFrame.new(0,-1,0)*angles(math.rad(20),0,0)},"Back","Out",0.2)
+	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)},"Back","Out",0.2)
+	SetTween(RW,{C0=CFrame.new(1.5,0.5,0)*angles(0,0,math.rad(90))},"Back","Out",0.2)
+	SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(math.rad(20),0,0)},"Back","Out",0.2)
+	SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(-40),0,0)},"Back","Out",0.2)
+	SetTween(LH,{C0=CFrame.new(-.5,-1,0)},"Back","Out",0.2)
+	task.wait(0.2)
+	attack = false
+end
+
+local function AT4()
+	attack = true
+	SetTween(RJW,{C0=RootCF*CFrame.new(0,0,0)*angles(math.rad(-20),0,math.rad(-80))},"Quad","InOut",0.2)
+	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(20),0,math.rad(80))},"Quad","InOut",0.2)
+	SetTween(RW,{C0=CFrame.new(1.5,0.5,0)},"Quad","InOut",0.2)
+	SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(math.rad(-20),math.rad(-70),math.rad(-90))},"Quad","InOut",0.2)
+	SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(20),0,0)},"Quad","InOut",0.2)
+	SetTween(LH,{C0=CFrame.new(-.5,-.5,-.4)*angles(math.rad(20),0,0)},"Quad","InOut",0.2)
+	CFMagniDamage(RootPart.CFrame*CF(0,0,-1), 9, 30, 45, 0, "Normal")
+	so("3051417237", LeftArm, 3, math.random(100,155)/100)
+	task.wait(0.2)
+	SetTween(RJW,{C0=RootCF*CFrame.new(0,-1,0)*angles(math.rad(20),0,math.rad(45))},"Back","Out",0.2)
+	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(-20),0,math.rad(-45))},"Back","Out",0.2)
+	SetTween(RW,{C0=CFrame.new(1.5,0.5,0)},"Back","Out",0.2)
+	SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(0,0,math.rad(-90))},"Back","Out",0.2)
+	SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(20),0,0)},"Back","Out",0.2)
+	SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(-10),0,0)},"Back","Out",0.2)
+	task.wait(0.2)
+	attack = false
+end
+
+local function AT5()
+	attack = true
+	SetTween(RJW,{C0=RootCF*CFrame.new(0,0,0)*angles(math.rad(-20),0,math.rad(80))},"Quad","InOut",0.2)
+	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(20),0,math.rad(-80))},"Quad","InOut",0.2)
+	SetTween(RW,{C0=CFrame.new(1.5,0.5,0)*angles(math.rad(-20),math.rad(70),math.rad(90))},"Quad","InOut",0.2)
+	SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(0,0,math.rad(-90))},"Quad","InOut",0.2)
+	SetTween(RH,{C0=CFrame.new(.5,-.5,-.4)*angles(math.rad(20),0,0)},"Quad","InOut",0.2)
+	SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(20),0,0)},"Quad","InOut",0.2)
+	CFMagniDamage(RootPart.CFrame*CF(0,0,-1), 9, 30, 45, 0, "Normal")
+	so("3051417237", RightArm, 3, math.random(100,155)/80)
+	task.wait(0.2)
+	SetTween(RJW,{C0=RootCF*CFrame.new(0,-1,0)*angles(math.rad(20),0,math.rad(-45))},"Back","Out",0.2)
+	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(-20),0,math.rad(45))},"Back","Out",0.2)
+	SetTween(RW,{C0=CFrame.new(1.5,0.5,0)*angles(0,0,math.rad(90))},"Back","Out",0.2)
+	SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)},"Back","Out",0.2)
+	SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(-10),0,0)},"Back","Out",0.2)
+	SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(20),0,0)},"Back","Out",0.2)
+	task.wait(0.2)
+	attack = false
+end
+
+local function AT6()
+	attack = true
+	SetTween(RJW,{C0=RootCF*CFrame.new(0,-1,-.3)*angles(math.rad(45),0,0)},"Quad","Out",0.3)
+	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(-20),0,0)},"Quad","Out",0.3)
+	SetTween(RW,{C0=CFrame.new(1.1,0.5,-.3)*angles(math.rad(20),math.rad(115),math.rad(90))},"Quad","In",0.15)
+	SetTween(LW,{C0=CFrame.new(-1.1,0.5,-.3)*angles(math.rad(20),math.rad(-115),math.rad(-90))},"Quad","In",0.15)
+	SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(-60),0,0)},"Quad","Out",0.2)
+	SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(60),0,0)},"Quad","Out",0.3)
+	so("3051417237", Torso, 3, math.random(140,185)/80)
+	CFMagniDamage(RootPart.CFrame*CF(-1.4,0,-1), 9, 40, 55, 10, "Knockdown")
+	CFMagniDamage(RootPart.CFrame*CF(1.4,0,-1), 9, 40, 55, 10, "Knockdown")
+	task.wait(0.175)
+	SetTween(RJW,{C0=RootCF*CFrame.new(0,-1.7,-.4)*angles(math.rad(45),0,0)},"Back","Out",0.2)
+	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)},"Back","Out",0.2)
+	SetTween(RW,{C0=CFrame.new(1.5,0.5,0)*angles(0,0,math.rad(90))},"Back","Out",0.2)
+	SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(0,0,math.rad(-90))},"Back","Out",0.2)
+	SetTween(RH,{C0=CFrame.new(.5,-1,0)},"Back","Out",0.2)
+	SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(65),0,0)},"Back","Out",0.2)
+	task.wait(0.2)
+	attack = false
+end
+
+local function AT7()
+	attack = true
+	so("3051417237", Torso, 3, 0.8)
+	task.spawn(function()
+		for _ = 1, 2 do
+			Swait(3)
+			so("3051417087", RightArm, 3, math.random(100,155)/100)
+		end
+	end)
+	for i = 1, 10 do
+		SetTween(RJW,{C0=RootCF*CFrame.new(0,-1.7+.17*i,-.4)*angles(math.rad(25-5*i),0,math.rad(36*i))},"Quad","Out",0.1)
+		SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)},"Quad","Out",0.2)
+		SetTween(RW,{C0=CFrame.new(1.5,0.5,0)*angles(math.rad(180),0,math.rad(90))},"Quad","Out",0.2)
+		SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(0,0,math.rad(-90))},"Quad","Out",0.2)
+		SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(-25),0,0)},"Quad","Out",0.2)
+		SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(25),0,0)},"Quad","Out",0.2)
+		CFMagniDamage(RootPart.CFrame*CF(1.4,0,-1+.17*i), 9, 10, 15, 10, "Knockdown")
+		Swait()
+	end
+	attack = false
+end
+
+local function Attack1()
+	attack = true
+	Humanoid.JumpPower = 0
+	Humanoid.WalkSpeed = 0.1
+	so("299058146", RightArm, 2, 2.5)
+	SetTween(RJW,{C0=RootCF*CFrame.new(0,0,0)*angles(math.rad(20),0,math.rad(-20))},"Back","Out",0.6)
+	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(0,0,math.rad(20))},"Back","Out",0.6)
+	SetTween(RW,{C0=CFrame.new(1.5,0.5,0)*angles(math.rad(-10),0,math.rad(20))},"Back","Out",0.6)
+	SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(0,0,math.rad(-20))},"Back","Out",0.6)
+	SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(-20),0,0)},"Back","Out",0.6)
+	SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(20),0,0)},"Back","Out",0.6)
+	Swait(0.2*30)
+
+	task.spawn(function()
+		if not EffectPack then return end
+		local attach = Instance.new("Attachment", RightArm)
+		attach.Orientation = Vector3.new(0,0,0)
+		attach.Position = Vector3.new(0,-1,0)
+		local p = safeClone(EffectPack, "Spark")
+		if p then p.Parent = attach; p:Emit(1) end
+		Debris:AddItem(attach, 2)
+	end)
+
+	local TheGunHandle = Instance.new("Part")
+	TheGunHandle.Reflectance = 0
+	TheGunHandle.Transparency = 1
+	TheGunHandle.CanCollide = false
+	TheGunHandle.Locked = true
+	TheGunHandle.Anchored = false
+	TheGunHandle.BrickColor = BrickColor.new("Really blue")
+	TheGunHandle.Name = "BHandle"
+	TheGunHandle.Size = Vector3.new(2.5,1,2.5)
+	TheGunHandle.Material = "SmoothPlastic"
+	TheGunHandle:BreakJoints()
+	TheGunHandle.Parent = Effects
+	TheGunHandle.CFrame = RootPart.CFrame
+	TheGunHandle.Massless = false
+	local SWeld = weld(TheGunHandle, RootPart, TheGunHandle, cf(0,0,-3)*angles(0,0,0))
+
+	local IsHit = false
+	local function onTouch(HitPa)
+		if IsHit then return end
+		local c = HitPa.Parent
+		local h = c:FindFirstChild("Humanoid")
+		local victimTorso = c:FindFirstChild("Torso") or c:FindFirstChild("UpperTorso")
+		local victimHead = c:FindFirstChild("Head")
+		if not (h and victimTorso and victimHead) then return end
+		IsHit = true
+		TheGunHandle:Destroy()
+
+		local TheFlyHandle = Instance.new("Part")
+		TheFlyHandle.Reflectance = 0
+		TheFlyHandle.Transparency = 1
+		TheFlyHandle.CanCollide = false
+		TheFlyHandle.Locked = true
+		TheFlyHandle.Anchored = true
+		TheFlyHandle.BrickColor = BrickColor.new("Really blue")
+		TheFlyHandle.Name = "FHandle"
+		TheFlyHandle.Size = Vector3.new(1,1,1)
+		TheFlyHandle.Material = "SmoothPlastic"
+		TheFlyHandle:BreakJoints()
+		TheFlyHandle.Parent = Effects
+		TheFlyHandle.CFrame = RootPart.CFrame
+		TheFlyHandle.Massless = false
+		local thejoint = joint(TheFlyHandle, RootPart, TheFlyHandle, cf())
+
+		local risingnum = (25-4.5*1)
+		local attach = Instance.new("Attachment", RightArm)
+		attach.Orientation = Vector3.new(0,0,0)
+		attach.Position = Vector3.new(0,-1,0)
+		local pSmoke = EffectPack and safeClone(EffectPack, "UpperCutSmoke")
+		if pSmoke then pSmoke.Parent = attach; pSmoke.Enabled = true end
+		Debris:AddItem(attach, 5)
+
+		so("231917750", Torso, 2, 0.9)
+		for i = 1, 10, 0.4 do
+			SetTween(RJW,{C0=RootCF*CFrame.new(-0.5*math.sin(i),0.5*math.cos(i),0)*angles(math.rad(25-4.5*i),0,math.rad(36*i*2))},"Quad","InOut",0.05)
+			SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(20),0,math.rad(-80))},"Quad","InOut",0.15)
+			SetTween(RW,{C0=CFrame.new(1.5,0.65,0)*angles(math.rad(160+2*i),0,math.rad(30-3*i))},"Quad","Out",0.15)
+			SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)},"Quad","Out",0.15)
+			SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(0+6.5*i),0,0)},"Quad","InOut",0.15)
+			SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(0-6.5*i),0,0)},"Quad","InOut",0.15)
+			SetTween(thejoint,{C0=CFrame.new(0,-i*2,i/2)},"Quad","InOut",0.05)
+			risingnum = risingnum + 75
+			if risingnum > 180 then risingnum = -180 end
+			if risingnum > -45 and risingnum < 45 then
+				so("471882019", victimHead, 3, 2.5)
+			end
+			Swait()
+		end
+		if pSmoke then pSmoke.Enabled = false end
+
+		so("782353117", Torso, 2, 0.9)
+		so("588738949", RightArm, 3, math.random(90,110)/100)
+		so("588738949", LeftArm, 3, math.random(90,110)/100)
+		SetTween(RJW,{C0=RootCF*CFrame.new(0,0,0)*angles(math.rad(-65),0,0)},"Back","Out",0.3)
+		SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(65),0,0)},"Back","Out",0.3)
+		SetTween(RW,{C0=CFrame.new(1.5,0.5,0)*angles(math.rad(90),0,math.rad(90))},"Back","Out",0.3)
+		SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(math.rad(90),0,math.rad(-90))},"Back","Out",0.3)
+		SetTween(RH,{C0=CFrame.new(.5,-.7,-.2)*angles(math.rad(-40),0,0)},"Back","Out",0.3)
+		SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(-30),0,0)},"Back","Out",0.3)
+		SetTween(thejoint,{C0=CFrame.new(0,-30,5)},"Back","Out",0.6)
+		for _ = 1, 3 do Swait(0.1*30) end
+
+		for i = 1, 2.5, 0.225 do
+			SetTween(RJW,{C0=RootCF*CFrame.new(0,2+(-0.75*i),20-1.8*i)*angles(math.rad(15+30*i*2),0,0)},"Quad","Out",0.2)
+			SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(-25),0,0)},"Quad","Out",0.3)
+			SetTween(RW,{C0=CFrame.new(1.5,0.5,0)*angles(math.rad(170),0,math.rad(90-(90/2.0)*i))},"Quad","Out",0.2)
+			SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(math.rad(170),0,math.rad(-90+(90/2.0)*i))},"Quad","Out",0.2)
+			SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(40),0,0)},"Quad","Out",0.3)
+			SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(40),0,0)},"Quad","Out",0.3)
+			Swait()
+			SetTween(thejoint,{C0=CFrame.new(0,-(20-1.8*i),13-1.2*i)},"Quad","Out",0.2)
+		end
+		so("231917750", Torso, 5, 0.9)
+
+		local attach2 = Instance.new("Attachment", Torso)
+		attach2.Orientation = Vector3.new(0,0,0)
+		attach2.Position = Vector3.new(0,0,0)
+		local pSmash = EffectPack and safeClone(EffectPack, "SmashSmoke")
+		if pSmash then pSmash.Parent = attach2; pSmash.Enabled = true end
+		Debris:AddItem(attach2, 7)
+
+		local parentSave = victimHead.Parent
+		victimHead.Parent = Effects
+		local hitground, hitgp, dir = rayCast(Torso.Position, CFrame.new(Torso.Position, (RootPart.CFrame*CF(0,-4,-10)).p).lookVector, 54, Character)
+		victimHead.Parent = parentSave
+		if hitgp then
+			SetTween(victimHead,{CFrame = CFrame.new(hitgp, Torso.Position)*angles(0,math.rad(180),math.rad(-45))},"Quad","In",0.3)
+			Swait(0.3*30)
+			so("231917744", victimHead, 4, 1.25)
+		end
+
+		SetTween(thejoint,{C0=CFrame.new(0,0,27)},"Quad","In",0.3)
+		SetTween(RJW,{C0=RootCF*CFrame.new(0,0,-.5)*angles(math.rad(85),0,0)},"Quad","Out",0.2)
+		SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(-65),0,0)},"Back","Out",0.2)
+		SetTween(RW,{C0=CFrame.new(1.5,0.5,0)*angles(math.rad(130),0,0)},"Back","Out",0.2)
+		SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(math.rad(130),0,0)},"Back","Out",0.2)
+		SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(-25),0,0)},"Back","Out",0.2)
+		SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(-25),0,0)},"Back","Out",0.2)
+		Swait(0.3*30)
+
+		if pSmash then pSmash.Enabled = false end
+		SetTween(RJW,{C0=RootCF*CFrame.new(0,0,0)},"Quad","Out",0.25)
+		SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(35),0,0)},"Back","Out",0.25)
+		SetTween(RW,{C0=CFrame.new(1.5,0.5,0)*angles(math.rad(30),0,math.rad(30))},"Back","Out",0.25)
+		SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)*angles(math.rad(30),0,math.rad(-30))},"Back","Out",0.25)
+		SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(10),0,0)},"Back","Out",0.25)
+		SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(-10),0,0)},"Back","Out",0.25)
+		Swait(0.25*30)
+		TheFlyHandle:Destroy()
+		attack = false
+	end
+
+	local combothingy = TheGunHandle.Touched:Connect(onTouch)
+	Swait(0.5*30)
+	if TheGunHandle.Parent == Effects then
+		combothingy:Disconnect()
+		TheGunHandle:Destroy()
+		attack = false
+	end
+	while attack do Swait() end
+	combothingy:Disconnect()
+	Humanoid.JumpPower = 60
+	Humanoid.WalkSpeed = 16
+end
+
+local function Attack6()
+	for _, v in ipairs(GatherAllInstances(Effects)) do
+		if v.Name == "Zombie" and v.Parent then v.Parent:Destroy() end
+	end
+end
+
+local function chatfunc(text)
+	task.spawn(function()
+		if Character:FindFirstChild('ChatGUI') then Character.ChatGUI:Destroy() end
+		local BBG = Instance.new("BillboardGui", Character)
+		BBG.Name = 'ChatGUI'
+		BBG.Size = UDim2.new(0,100,0,40)
+		BBG.StudsOffset = Vector3.new(0,2.753,0)
+		BBG.Adornee = Head
+		local Txt = Instance.new("TextLabel", BBG)
+		Txt.Text = ""
+		Txt.BackgroundTransparency = 1
+		Txt.TextColor3 = MAINRUINCOLOR.Color
+		Txt.TextStrokeColor3 = Color3.new(0,0,0)
+		Txt.BorderSizePixel = 0
+		Txt.Font = Enum.Font.SourceSansBold
+		Txt.TextSize = 28
+		Txt.TextStrokeTransparency = 0
+		Txt.Size = UDim2.new(1,0,0.5,0)
+		for i = 1, #text do
+			task.delay(i/25, function()
+				so("131238032", Head, 5, math.random(20,32)/35)
+				Txt.Text = text:sub(1,i)
+			end)
+		end
+		task.delay((#text/25)+2.6, function()
+			task.wait(0.2)
+			for _ = 1, 15 do
+				Swait()
+				Txt.TextTransparency = Txt.TextTransparency + 1/15
+				Txt.TextStrokeTransparency = Txt.TextStrokeTransparency + 1/15
+			end
+		end)
+		task.delay((#text/25)+3, function() BBG:Destroy() end)
+	end)
+end
+
+chatfunc("Advanced Neko Script V.2 (FIXED)")
+
+local function ClickCombo()
+	if Anim == "Fall" or Anim == "Jump" then return end
+	if agresive == false then
+		if Combo == 0 then AT1(); Combo = 1
+		elseif Combo == 1 then AT2(); Combo = 2
+		elseif Combo == 2 then AT3(); Combo = 0
+		elseif Combo == 3 then Combo = 0; ClickCombo() end
+	else
+		if Combo == 0 then AT4(); Combo = 1
+		elseif Combo == 1 then AT5(); Combo = 2
+		elseif Combo == 2 then AT6(); Combo = 3
+		elseif Combo == 3 then AT7(); Combo = 0 end
+	end
+end
+
+local Hold = false
+
+local function Button1DownF()
+	Hold = true
+	while Hold do
+		if attack == false then ClickCombo() end
+		Swait()
+	end
+end
+
+local function Button1UpF()
+	if Hold then Hold = false end
+end
+
+local function KeyDownF(key)
+	key = key:lower()
+	if key == "f" and attack == false then
+		if agresive == false then
+			SetTween(RCW,{C0=CF(0,-.75,0)},"Quad","Out",.5)
+			SetTween(LCW,{C0=CF(0,-.75,0)},"Quad","Out",.5)
+			agresive = true
+			so("3051417649", RightArm, 1.5, 0.8)
+			so("3051417649", LeftArm, 1.5, 0.8)
+			so("418252437", Head, 5, math.random(20,32)/35)
+			chatfunc("Claws: ON")
+			lastid = "http://www.roblox.com/asset/?id=1228696343"
+		else
+			SetTween(RCW,{C0=CF(0,0,0)},"Quad","In",.5)
+			SetTween(LCW,{C0=CF(0,0,0)},"Quad","In",.5)
+			agresive = false
+			so("3051417791", RightArm, 1.5, 0.8)
+			so("3051417791", LeftArm, 1.5, 0.8)
+			chatfunc("Claws: OFF")
+			lastid = "http://www.roblox.com/asset/?id=876542935"
+		end
+	end
+	if key == "r" and attack == false then
+		attack = true
+		local laying = true
+		while laying do
+			SetTween(RJW,{C0=RootCF*CFrame.new(0,0,-2.20)*angles(math.rad(75),math.rad(5*math.cos(sine/8)),math.rad(5*math.cos(sine/8)))},"Quad","InOut",0.1)
+			SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(-60),math.rad(15*math.sin(sine/8)),0)},"Quad","InOut",0.1)
+			SetTween(RW,{C0=CFrame.new(1,1.2,-.9)*angles(math.rad(250),math.rad(5*math.cos(sine/8)),math.rad(-15+5*math.cos(sine/8)))},"Quad","Out",0.1)
+			SetTween(LW,{C0=CFrame.new(-1,1.2,-.9)*angles(math.rad(250),math.rad(5*math.cos(sine/8)),math.rad(15+5*math.cos(sine/8)))},"Quad","Out",0.1)
+			SetTween(RH,{C0=CFrame.new(.5,-.9-.1*math.cos(sine/8),-.4+.4*math.cos(sine/8))*angles(math.rad(-50+35*math.cos(sine/8)),math.rad(5*math.cos(sine/8)),math.rad(-15*math.cos(sine/8)))},"Quad","InOut",0.1)
+			SetTween(LH,{C0=CFrame.new(-.5,-.9+.1*math.cos(sine/8),-.4-.4*math.cos(sine/8))*angles(math.rad(-50-35*math.cos(sine/8)),math.rad(5*math.cos(sine/8)),math.rad(-15*math.cos(sine/8)))},"Quad","InOut",0.1)
+			if tailw and tailc0 then
+				SetTween(tailw,{C0=CF(-.2*math.cos(sine/8),0,.30+.15*math.sin(sine/4))*ANGLES(mr(80+10*math.sin(sine/4)),mr(10*math.cos(sine/8)),mr(10-30*math.cos(sine/8)))},"Quad","In",.1)
+			end
+			Swait()
+			if (Humanoid.MoveDirection * Vector3.new(1,0,1)).Magnitude > 0.5 then laying = false end
+		end
+		attack = false
+	end
+	if key == "z" and attack == false then Attack1() end
+	if key == "x" and attack == false then Attack2() end
+	if key == "c" and attack == false then Attack3() end
+	if key == "t" and attack == false then
+		attack = true
+		SetTween(RJW,{C0=RootCF*CFrame.new(0,0,0)*angles(0,0,math.rad(30))},"Back","Out",0.3)
+		SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(0,0,math.rad(-30))},"Back","Out",0.3)
+		SetTween(RW,{C0=CFrame.new(1.3,0.5,0)*angles(math.rad(120),0,math.rad(-40))},"Back","Out",0.3)
+		SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)},"Back","Out",0.3)
+		SetTween(RH,{C0=CFrame.new(.5,-1,0)},"Back","Out",0.3)
+		SetTween(LH,{C0=CFrame.new(-.5,-1,0)},"Back","Out",0.3)
+		Swait(0.3*30)
+		chatfunc("^v^")
+		so("3051419970", Character, 4, 0.9)
+		change = 4.3
+		for _ = 1, 4, 0.1 do
+			SetTween(RJW,{C0=RootCF*CFrame.new(0,0,-.1-.05*math.cos(sine/8))*angles(math.rad(1+1*math.cos(sine/8)),0,math.rad(30+1*math.cos(sine/8)))},"Quad","InOut",0.1)
+			SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(0,0,math.rad(-30+1*math.cos(sine/8)))},"Quad","InOut",0.1)
+			SetTween(RW,{C0=CFrame.new(1.3,0.5,0)*angles(math.rad(120),0,math.rad(-40))},"Quad","InOut",0.1)
+			SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)},"Quad","InOut",0.1)
+			SetTween(RH,{C0=CFrame.new(.5,-.95+.05*math.cos(sine/8),-.2+.05*math.cos(sine/8))*angles(math.rad(-10+1*math.cos(sine/8)),math.rad(25*math.cos(sine/16)),0)},"Quad","InOut",0.1)
+			SetTween(LH,{C0=CFrame.new(-.5,-.95+.05*math.cos(sine/8),0)*angles(math.rad(1+1*math.cos(sine/8)),0,0)},"Quad","InOut",0.1)
+			Swait()
+		end
+		attack = false
+	end
+	if key == "p" and attack == false and Player.Name == "123jl123" then
+		if mememode == false then
+			mememode = true
+			lastid = "http://www.roblox.com/asset/?id=876542935"
+			if s2 then lastsongpos = 0; s2.TimePosition = 0 end
+		else
+			mememode = false
+			CurId = CurId - 1
+			KeyDownF("n")
+		end
+	end
+	if key == "0" then
+		if isruning == false then isruning = true end
+	end
+	if key == "m" then
+		if playsong then playsong = false; if s2 then s2:Stop() end
+		else playsong = true; if s2 then s2:Play() end end
+	end
+	if key == "n" and mememode == false then
+		CurId = CurId + 1
+		if CurId > 5 then CurId = 1 end
+		chatfunc("now playing song Nr"..CurId)
+		local songs = {
+			[1]="http://www.roblox.com/asset/?id=876316256",
+			[2]="http://www.roblox.com/asset/?id=148453883",
+			[3]="http://www.roblox.com/asset/?id=2899621215",
+			[4]="http://www.roblox.com/asset/?id=256006025",
+			[5]="http://www.roblox.com/asset/?id=396979089",
+		}
+		lastid = songs[CurId] or songs[1]
+		if s2 then lastsongpos = 0; s2.TimePosition = 0 end
+	end
+end
+
+local function mainLoop()
+	while true do
+		local success, err = pcall(function()
+			sine = sine + change
+			local hitfloor = rayCast(RootPart.Position, Vector3.new(0,-1,0), 4, Character)
+
+			if Character:FindFirstChild("Sound") and Character:FindFirstChild("Sound") ~= s2 then
+				Character:FindFirstChild("Sound"):Destroy()
+			end
+
+			local torvel = (Humanoid.MoveDirection * Vector3.new(1,0,1)).Magnitude
+			local vy = RootPart.Velocity.Y
+
+			if vy > 1 and hitfloor == nil then Anim = "Jump"
+			elseif vy < -1 and hitfloor == nil then Anim = "Fall"
+			elseif Humanoid.Sit then Anim = "Sit"
+			elseif torvel < 0.5 and hitfloor ~= nil then Anim = "Idle"
+			elseif torvel > 0.5 and hitfloor ~= nil then Anim = "Walk"
+			else Anim = "" end
+
+			local Ccf = RootPart.CFrame
+			local W1 = Humanoid.MoveDirection * Ccf.LookVector
+			local W2 = Humanoid.MoveDirection * Ccf.RightVector
+			forWFB = W1.X + W1.Z
+			forWRL = W2.X + W2.Z
+
+			if s2 and not s2.Parent then
+				s2 = s2c:Clone()
+				s2.Parent = Torso
+				s2.Name = "BGMusic"
+				s2.Pitch = 1
+				s2.Volume = 1.5
+				s2.Looped = true
+				s2.Archivable = false
+				s2.TimePosition = lastsongpos
+				if playsong then s2:Play() else s2:Stop() end
+			elseif s2 then
+				s2.SoundId = lastid
+				s2.EmitterSize = 30
+			end
+
+			inairvel = math.min(torvel, 30) / 50 * 2
+
+			if attack == false then
+				if Anim == "Jump" then
+					change = 1.2
+					SetTween(RJW,{C0=RootCF*cn(0,(0.0395/2)*math.cos(sine/8),-0.1+0.0395*math.cos(sine/8))*angles(math.rad(-6.5-1.5*math.cos(sine/8))+(inairvel*forWFB)/2, -(inairvel*forWRL)/2, 0)},"Quad","Out",0.25)
+					SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(-26.5+2.5*math.cos(sine/8)),0,0)},"Quad","Out",0.25)
+					SetTween(RW,{C0=cf(1.45,0.5,0)*angles(math.rad(140-2*math.cos(sine/8)),math.rad(-5),math.rad(8+4*math.cos(sine/8)))},"Quad","Out",0.2)
+					SetTween(LW,{C0=cf(-1.45,0.5,0)*angles(math.rad(140-2*math.cos(sine/8)),math.rad(5),math.rad(-8-4*math.cos(sine/8)))},"Quad","Out",0.2)
+					SetTween(RH,{C0=CFrame.new(.5,-0.85+0.05*math.cos(sine/15),-.2)*CFrame.Angles(math.rad(-15-1*math.cos(sine/10)),0,0)},"Quad","InOut",0.075)
+					SetTween(LH,{C0=CFrame.new(-.5,-0.35+0.05*math.cos(sine/15),-.4)*CFrame.Angles(math.rad(-25+1*math.cos(sine/10)),0,0)},"Quad","InOut",0.075)
+				elseif Anim == "Fall" then
+					change = 1.2
+					SetTween(RJW,{C0=RootCF*cn(0,(0.0395/2)*math.cos(sine/8),-0.5+0.0395*math.cos(sine/8))*angles(math.rad(5.5-1.5*math.cos(sine/8))-(inairvel*forWFB)/2,(inairvel*forWRL)/2,0)},"Quad","Out",0.35)
+					SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(26.5+2.5*math.cos(sine/8)),0,0)},"Quad","Out",0.25)
+					SetTween(RW,{C0=cf(1.45,0.5,0)*angles(math.rad(105-2*math.cos(sine/8)),math.rad(-15),math.rad(80+4*math.cos(sine/8)))},"Quad","Out",0.2)
+					SetTween(LW,{C0=cf(-1.45,0.5,0)*angles(math.rad(105-2*math.cos(sine/8)),math.rad(15),math.rad(-80-4*math.cos(sine/8)))},"Quad","Out",0.2)
+					SetTween(RH,{C0=CFrame.new(.5,-0.15+0.05*math.cos(sine/15),-.4)*CFrame.Angles(math.rad(-15-1*math.cos(sine/10)),0,0)},"Quad","InOut",0.1)
+					SetTween(LH,{C0=CFrame.new(-.5,-0.55+0.05*math.cos(sine/15),-.4)*CFrame.Angles(math.rad(-0+1*math.cos(sine/10)),0,0)},"Quad","InOut",0.1)
+				elseif Anim == "Idle" then
+					local dahspeed = (attack and mememode) and 5 or 1
+					if agresive == false then
+						change = (0.60*1.75)*dahspeed
+						Humanoid.JumpPower, Humanoid.WalkSpeed = 60, 16
+						SetTween(RJW,{C0=RootCF*cn(0,0,-0.1+0.0395*math.cos(sine/8))*angles(math.rad(1.5-1*math.cos(sine/8)),0,math.rad(-20))},"Quad","InOut",0.1)
+						SetTween(NeckW,{C0=NeckCF*angles(math.rad(6.5-3.5*math.sin(sine/8)),math.rad(2.5-5.5*math.cos(sine/16)),math.rad(20-6.5*math.cos(sine/15+0.4*math.cos(sine/10))))},"Quad","InOut",0.1)
+						SetTween(RW,{C0=cf(1,0.5,0.5)*angles(math.rad(3*math.sin(sine/8)),math.rad(-5),math.rad(-15+4*math.cos(sine/8)))},"Quad","Out",0.2)
+						SetTween(LW,{C0=cf(-1,0.5,0.5)*angles(math.rad(3*math.sin(sine/8)),math.rad(5),math.rad(15-4*math.cos(sine/8)))},"Quad","Out",0.2)
+						SetTween(RH,{C0=CFrame.new(.5,-0.95-0.04*math.cos(sine/8),0)*CFrame.Angles(math.rad(-1*math.cos(sine/8)),0,math.rad(-9))},"Quad","InOut",0.1)
+						SetTween(LH,{C0=CFrame.new(-.5,-0.95-0.04*math.cos(sine/8),0)*CFrame.Angles(math.rad(-1*math.cos(sine/8)),math.rad(20),math.rad(9))},"Quad","InOut",0.1)
+					else
+						change = (0.60*1.75)*dahspeed
+						Humanoid.JumpPower, Humanoid.WalkSpeed = 60, 16
+						SetTween(RJW,{C0=RootCF*cn(0,0,-0.1+0.0395*math.cos(sine/8))*angles(math.rad(1.5-1*math.cos(sine/8)),0,0)},"Quad","InOut",0.1)
+						SetTween(NeckW,{C0=NeckCF*angles(math.rad(6.5-3.5*math.sin(sine/8)),math.rad(2.5-5.5*math.cos(sine/16)),math.rad(20-6.5*math.cos(sine/15+0.4*math.cos(sine/10))))},"Quad","InOut",0.1)
+						SetTween(RW,{C0=cf(1.45,0.5,0)*angles(math.rad(3*math.sin(sine/8)),math.rad(-5),math.rad(15+4*math.cos(sine/8)))},"Quad","Out",0.2)
+						SetTween(LW,{C0=cf(-1.45,0.5,0)*angles(math.rad(3*math.sin(sine/8)),math.rad(5),math.rad(-15-4*math.cos(sine/8)))},"Quad","Out",0.2)
+						SetTween(RH,{C0=CFrame.new(.5,-0.95-0.04*math.cos(sine/8),0)*CFrame.Angles(math.rad(-1*math.cos(sine/8)),0,math.rad(-9))},"Quad","InOut",0.1)
+						SetTween(LH,{C0=CFrame.new(-.5,-0.95-0.04*math.cos(sine/8),0)*CFrame.Angles(math.rad(-1*math.cos(sine/8)),0,math.rad(9))},"Quad","InOut",0.1)
+					end
+				elseif Anim == "Walk" then
+					if agresive == false then
+						local speed = mememode and 4 or 1
+						change = 2.4*speed
+						Humanoid.JumpPower, Humanoid.WalkSpeed = 60*speed, 16*speed
+						local RH2 = cf(-forWRL/7*math.cos(sine/8),0,forWFB/7*math.cos(sine/8))*angles(math.rad(-forWFB*30)*math.cos(sine/8),0,math.rad(-forWRL*30)*math.cos(sine/8))
+						local LH2 = cf(forWRL/7*math.cos(sine/8),0,-forWFB/7*math.cos(sine/8))*angles(math.rad(forWFB*30)*math.cos(sine/8),0,math.rad(forWRL*30)*math.cos(sine/8))
+						SetTween(RJW,{C0=RootCF*CFrame.new(0,0,-0.05+0.055*math.cos(sine/4)-math.sin(sine/4)/8)*angles(math.rad((forWFB*2-forWFB*math.cos(sine/4))*7),math.rad((-forWRL*2-(-forWRL)*math.cos(sine/4))*5),math.rad(8*math.cos(sine/8)))},"Quad","InOut",WalkAnimMove/speed)
+						SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0.025*math.cos(sine/4))*angles(math.rad((-forWFB*1-(-forWFB)*math.cos(sine/4))*7),math.rad((forWRL*2-forWRL*math.cos(sine/4))*3.5),math.rad(-forWRL*45+-8*math.cos(sine/8)))},"Quad","InOut",WalkAnimMove/speed)
+						SetTween(RW,{C0=cf(1.45,0.5+forWRL/50*math.cos(sine/8),0)*angles(math.rad(forWFB*15*math.cos(sine/8)),0,math.rad(8+forWRL*5*math.cos(sine/8)))},"Quad","Out",WalkAnimMove/speed)
+						SetTween(LW,{C0=cf(-1.45,0.5+forWRL/50*math.cos(sine/8),0)*angles(math.rad(-forWFB*15*math.cos(sine/8)),0,math.rad(-8-forWRL*5*math.cos(sine/8)))},"Quad","Out",WalkAnimMove/speed)
+						SetTween(RH,{C0=CFrame.new(.5,-0.85+0.15*math.sin(sine/8),-.15+.15*math.cos(sine/8))*RH2*CFrame.Angles(math.rad(-5*math.cos(sine/8)),0,math.rad(2.5))},"Quad","InOut",WalkAnimMove/speed)
+						SetTween(LH,{C0=CFrame.new(-.5,-0.85-0.15*math.sin(sine/8),-.15-.15*math.cos(sine/8))*LH2*CFrame.Angles(math.rad(5*math.cos(sine/8)),0,math.rad(-2.5))},"Quad","InOut",WalkAnimMove/speed)
+					else
+						local speed = mememode and 4 or 1.6
+						change = 2.5*speed
+						Humanoid.JumpPower, Humanoid.WalkSpeed = 60*speed, 22*speed
+						local RH2 = cf(-forWRL/9*math.cos(sine/8),0,forWFB/7*math.cos(sine/8))*angles(math.rad(-forWFB*60)*math.cos(sine/8),0,math.rad(-forWRL*25)*math.cos(sine/8))
+						local LH2 = cf(forWRL/9*math.cos(sine/8),0,-forWFB/7*math.cos(sine/8))*angles(math.rad(forWFB*60)*math.cos(sine/8),0,math.rad(forWRL*25)*math.cos(sine/8))
+						SetTween(RJW,{C0=RootCF*CFrame.new(0,0,-0.05-0.1*math.cos(sine/4)-math.sin(sine/4)/8)*angles(math.rad(forWFB*25-(-forWFB)),0,math.rad(8*math.cos(sine/8)))},"Quad","InOut",WalkAnimMove/speed)
+						SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0.025*math.cos(sine/4))*angles(0,math.rad((forWRL*2-forWRL*math.cos(sine/4))*3.5),math.rad(-forWRL*45+-8*math.cos(sine/8)))},"Quad","InOut",WalkAnimMove/speed)
+						SetTween(RW,{C0=cf(1.5,0.5+0.05*math.cos(sine/8),0)*angles(math.rad(forWFB*-65-(-forWFB)),math.rad(-5),math.rad(6-6*math.cos(sine/8)))},"Quad","Out",0.2)
+						SetTween(LW,{C0=cf(-1.45,0.5+0.05*math.cos(sine/8),0)*angles(math.rad(forWFB*-65-(-forWFB)),math.rad(5),math.rad(-6+6*math.cos(sine/8)))},"Quad","Out",0.2)
+						SetTween(RH,{C0=CFrame.new(.5,-0.95+0.25*math.sin(sine/8),-.1+.25*math.cos(sine/8))*RH2*CFrame.Angles(0,0,0)},"Quad","InOut",WalkAnimMove/speed)
+						SetTween(LH,{C0=CFrame.new(-.5,-0.95-0.25*math.sin(sine/8),-.1-.25*math.cos(sine/8))*LH2*CFrame.Angles(0,0,0)},"Quad","InOut",WalkAnimMove/speed)
+					end
+				elseif Anim == "Sit" then
+					SetTween(RJW,{C0=RootCF*CFrame.new(0,0,0)},"Quad","InOut",0.1)
+					SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)},"Quad","InOut",0.1)
+					SetTween(RW,{C0=CFrame.new(1.5,0.5,0)},"Quad","Out",0.1)
+					SetTween(LW,{C0=CFrame.new(-1.5,0.5,0)},"Quad","Out",0.1)
+					SetTween(RH,{C0=CFrame.new(.5,-1,0)*angles(math.rad(90),0,0)},"Quad","InOut",0.1)
+					SetTween(LH,{C0=CFrame.new(-.5,-1,0)*angles(math.rad(90),0,0)},"Quad","InOut",0.1)
+				end
+			end
+
+			if attack == false and not (agresive == true and Anim == "Walk") then
+				tailSafe(tailc0)
+			end
+		end)
+		if not success then
+			warn("[Neko] Loop error:", err)
+		end
+		Swait(Animstep*30)
+	end
+end
+
+task.spawn(mainLoop)
+
+local mouse = Player:GetMouse()
+local a = mouse.KeyDown:Connect(KeyDownF)
+local b = mouse.KeyUp:Connect(Button1UpF)
+local c = mouse.Button1Down:Connect(Button1DownF)
+local d = mouse.Button1Up:Connect(Button1UpF)
+local e = mouse.Move:Connect(function()
+	if mouse.Target then Target = mouse.Target end
+end)
+
+local diedEvent = Instance.new("BindableEvent")
+Humanoid.Died:Connect(function()
+	diedEvent:Fire()
+	for _, conn in ipairs({a,b,c,d,e}) do
+		pcall(function() conn:Disconnect() end)
+	end
+end)
+
+Humanoid.HealthChanged:Connect(function() GainCharge(Humanoid) end)
