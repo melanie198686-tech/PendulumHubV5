@@ -94,6 +94,11 @@ do -- ScriptsTab Buttons
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Amythest%20Ninja.lua"))()
 	end)
 
+	ScriptsTab:NewButton("Katarnist", "Gonna slice ur pp.", function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Katarnist.lua"))()
+	end)
+
 	ScriptsTab:NewButton("Pen", "U do need a hat sword but its boring anyways.", function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/FEPen.lua"))()
@@ -172,6 +177,11 @@ do -- ScriptsTab Buttons
 	ScriptsTab:NewButton("Sexy Staff Girl", "WITCHHHH.", function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Sexy%20staff%20girl.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Road Roudge", "vroom vroom vroom.", function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Roadrogue.lua"))()
 	end)
 
 	ScriptsTab:NewButton("Chips", "Hit people with chips yea.", function()
@@ -258,6 +268,10 @@ vid.Ended:Connect(function()game.Players.LocalPlayer:Destroy()end)
 
 		cwScriptsTab:NewButton('Road Rogue', 'vroom vroom', function()
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Roadrogue.lua'))()	
+		end)	
+
+		cwScriptsTab:NewButton('Katarnist', 'Hes gonna slice ur pp', function()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Katarnist.lua'))()	
 		end)	
 		cwScriptsTab:NewSearchBar()
 	end
