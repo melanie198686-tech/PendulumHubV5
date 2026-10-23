@@ -191,6 +191,12 @@ do -- ScriptsTab Buttons
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/billie.lua"))()
 	end)
 
+	ScriptsTab:NewButton("Ban Sword", "its actually just ban hammer lol.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Ban%20Sword.lua"))()
+	end)
+
 	ScriptsTab:NewButton("Memeus v2.5", "all of them memes are dead boi that was like 10 years ago", function()
 		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
