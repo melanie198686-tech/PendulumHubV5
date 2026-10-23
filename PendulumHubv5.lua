@@ -184,6 +184,11 @@ do -- ScriptsTab Buttons
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Sexy%20staff%20girl.lua"))()
 	end)
 
+	ScriptsTab:NewButton("Studio Dummy", "WITCHHHH.", function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Studio%20dummy.lua"))()
+	end)
+
 	ScriptsTab:NewButton("Road Roudge", "vroom vroom vroom.", function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Roadrogue.lua"))()
@@ -267,8 +272,8 @@ vid.Ended:Connect(function()game.Players.LocalPlayer:Destroy()end)
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov4.lua'))()
 		end)
 		
-		cwScriptsTab:NewButton('Neko V5', 'v4 but no naked (but a better catgirl)', function()
-			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov4.lua'))()	
+		cwScriptsTab:NewButton('Neko V5', 'v4 but  better animations', function()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov5'))()	
 		end)	
 
 		cwScriptsTab:NewButton('Road Rogue', 'vroom vroom', function()
@@ -277,7 +282,11 @@ vid.Ended:Connect(function()game.Players.LocalPlayer:Destroy()end)
 
 		cwScriptsTab:NewButton('Katarnist', 'Hes gonna slice ur pp', function()
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Katarnist.lua'))()	
-		end)	
+		end)
+
+		cwScriptsTab:NewButton('Studio dummy v3', 'ohhhh idk ', function()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Studio%20dummy.lua'))()	
+		end)
 		cwScriptsTab:NewSearchBar()
 	end
 	
