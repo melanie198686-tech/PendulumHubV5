@@ -11,23 +11,13 @@ local Frame_2 = Instance.new("Frame")
 local TextLabel = Instance.new("TextLabel")
 local TextDesc = Instance.new("TextLabel")
 local TextButton = Instance.new("TextButton")
-local TextButton2 = Instance.new("TextButton")
-local ImageButton = Instance.new("ImageButton")
-local Frame3 = Instance.new("CanvasGroup")
-local Frame_4 = Instance.new("Frame")
-local TextLabel3 = Instance.new("TextLabel")
-local LogsLabel = Instance.new("TextLabel")
-local HideButton = Instance.new("TextButton")
-local RainbowButton = Instance.new("TextButton")
+local ShowButton = Instance.new("TextButton")
+local CornerShowButton = Instance.new("UICorner")
 
 local CornerFrame = Instance.new("UICorner")
 local CornerHeader = Instance.new("UICorner")
-local CornerLogs = Instance.new("UICorner")
-local CornerLogsHeader = Instance.new("UICorner")
-local CornerHide = Instance.new("UICorner")
 
 local StrokeFrame = Instance.new("UIStroke")
-local StrokeFrame3 = Instance.new("UIStroke")
 
 ScreenGui.Parent = PlayerGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -39,7 +29,7 @@ Frame.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
 Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame.BorderSizePixel = 0
 Frame.Position = UDim2.new(0.388539821, 0, 0.427821517, 0)
-Frame.Size = UDim2.new(0, 158, 0, 205)
+Frame.Size = UDim2.new(0, 158, 0, 110)
 
 CornerFrame.CornerRadius = UDim.new(0, 8)
 CornerFrame.Parent = Frame
@@ -79,117 +69,49 @@ TextDesc.BorderSizePixel = 0
 TextDesc.Position = UDim2.new(0, 5, 0, 16)
 TextDesc.Size = UDim2.new(0, 120, 0, 11)
 TextDesc.Font = Enum.Font.SourceSans
-TextDesc.Text = "deobfuscation by 118_W (6xow in discord)"
+TextDesc.Text = "Pendulum hub fling"
 TextDesc.TextColor3 = Color3.fromRGB(200, 200, 200)
 TextDesc.TextSize = 12.000
 TextDesc.TextXAlignment = Enum.TextXAlignment.Left
 TextDesc.TextScaled = true
 TextDesc.TextWrapped = true
 
-ImageButton.Parent = Frame_2
-ImageButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-ImageButton.BackgroundTransparency = 1.000
-ImageButton.BorderSizePixel = 0
-ImageButton.Position = UDim2.new(1, -23, 0, 4)
-ImageButton.Size = UDim2.new(0, 22, 0, 22)
-ImageButton.Image = "rbxassetid://10709791437"
 
 TextButton.Parent = Frame
 TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 TextButton.BorderColor3 = Color3.fromRGB(255, 255, 255)
 TextButton.BorderSizePixel = 0
-TextButton.Position = UDim2.new(0.113924049, 0, 0.25, 0)
+TextButton.Position = UDim2.new(0, 18, 0, 43)
 TextButton.Size = UDim2.new(0, 121, 0, 35)
 TextButton.Font = Enum.Font.SourceSansItalic
-TextButton.Text = "fling OFF"
+TextButton.Text = "FLING OFF"
 TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
 TextButton.TextSize = 20.000
 
-TextButton2.Parent = Frame
-TextButton2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-TextButton2.BorderColor3 = Color3.fromRGB(255, 255, 255)
-TextButton2.BorderSizePixel = 0
-TextButton2.Position = UDim2.new(0.113924049, 0, 0.58, 0)
-TextButton2.Size = UDim2.new(0, 121, 0, 35)
-TextButton2.Font = Enum.Font.SourceSansItalic
-TextButton2.Text = "TP OFF"
-TextButton2.TextColor3 = Color3.fromRGB(0, 0, 0)
-TextButton2.TextSize = 20.000
+-- Always-visible bottom-left control for hiding/showing the main panel.
+ShowButton.Name = "ShowButton"
+ShowButton.Parent = ScreenGui
+ShowButton.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+ShowButton.BorderSizePixel = 0
+ShowButton.Position = UDim2.new(0, 12, 1, -46)
+ShowButton.Size = UDim2.new(0, 78, 0, 34)
+ShowButton.Font = Enum.Font.Sarpanch
+ShowButton.Text = "HIDE"
+ShowButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ShowButton.TextSize = 17
+ShowButton.AutoButtonColor = true
+ShowButton.ZIndex = 100
 
-RainbowButton.Parent = Frame
-RainbowButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-RainbowButton.BorderSizePixel = 0
-RainbowButton.Position = UDim2.new(0.113924049, 0, 0.79, 0)
-RainbowButton.Size = UDim2.new(0, 121, 0, 30)
-RainbowButton.Font = Enum.Font.SourceSansItalic
-RainbowButton.Text = "Rainbow OFF"
-RainbowButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-RainbowButton.TextSize = 18
+CornerShowButton.CornerRadius = UDim.new(0, 7)
+CornerShowButton.Parent = ShowButton
 
-Frame3.Parent = Frame
-Frame3.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
-Frame3.BorderColor3 = Color3.fromRGB(0, 0, 0)
-Frame3.BorderSizePixel = 0
-Frame3.Position = UDim2.new(1, 5, 0, 0)
-Frame3.Size = UDim2.new(0, 158, 0, 160)
-Frame3.Visible = false
-Frame3.GroupTransparency = 1
+ShowButton.MouseButton1Click:Connect(function()
+    Frame.Visible = not Frame.Visible
+    ShowButton.Text = Frame.Visible and "HIDE" or "SHOW"
+end)
 
-CornerLogs.CornerRadius = UDim.new(0, 8)
-CornerLogs.Parent = Frame3
 
-StrokeFrame3.Color = Color3.fromRGB(50, 50, 50)
-StrokeFrame3.Thickness = 1.5
-StrokeFrame3.Parent = Frame3
 
-Frame_4.Parent = Frame3
-Frame_4.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Frame_4.BorderColor3 = Color3.fromRGB(0, 0, 0)
-Frame_4.BorderSizePixel = 0
-Frame_4.Size = UDim2.new(0, 158, 0, 25)
-
-CornerLogsHeader.CornerRadius = UDim.new(0, 8)
-CornerLogsHeader.Parent = Frame_4
-
-TextLabel3.Parent = Frame_4
-TextLabel3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel3.BackgroundTransparency = 1.000
-TextLabel3.BorderSizePixel = 0
-TextLabel3.Position = UDim2.new(0, 5, 0, 0)
-TextLabel3.Size = UDim2.new(0, 148, 0, 25)
-TextLabel3.Font = Enum.Font.Sarpanch
-TextLabel3.Text = "Change logs"
-TextLabel3.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel3.TextSize = 25.000
-TextLabel3.TextXAlignment = Enum.TextXAlignment.Left
-TextLabel3.TextScaled = true
-
-LogsLabel.Parent = Frame3
-LogsLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-LogsLabel.BackgroundTransparency = 1.000
-LogsLabel.BorderSizePixel = 0
-LogsLabel.Position = UDim2.new(0, 8, 0, 33)
-LogsLabel.Size = UDim2.new(0, 142, 0, 117)
-LogsLabel.Font = Enum.Font.SourceSans
-LogsLabel.Text = "- Deobfuscation by 118_W (6xow in discord)"
-LogsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-LogsLabel.TextSize = 14.000
-LogsLabel.TextXAlignment = Enum.TextXAlignment.Left
-LogsLabel.TextYAlignment = Enum.TextYAlignment.Top
-LogsLabel.TextWrapped = true
-
-HideButton.Parent = ScreenGui
-HideButton.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
-HideButton.BorderSizePixel = 0
-HideButton.Position = UDim2.new(0, 15, 1, -50)
-HideButton.Size = UDim2.new(0, 80, 0, 35)
-HideButton.Font = Enum.Font.Sarpanch
-HideButton.Text = "Hide"
-HideButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-HideButton.TextSize = 18.000
-
-CornerHide.CornerRadius = UDim.new(0, 6)
-CornerHide.Parent = HideButton
 
 local function IIMAWH_fake_script()
 	local script = Instance.new('LocalScript', TextButton)
@@ -232,315 +154,120 @@ local function IIMAWH_fake_script()
 	
 	toggleButton.MouseButton1Click:Connect(function()
 		hiddenfling = not hiddenfling
-		toggleButton.Text = hiddenfling and "fling ON" or "fling OFF"
+		toggleButton.Text = hiddenfling and "FLING ON" or "FLING OFF"
 		if hiddenfling then coroutine.wrap(fling)() end
 	end)
 end
 coroutine.wrap(IIMAWH_fake_script)()
 
-local function TP_fake_script()
-	local script = Instance.new('LocalScript', TextButton2)
-	local Players = game:GetService("Players")
-	local RunService = game:GetService("RunService")
-	local workspace = game:GetService("Workspace")
-	local lp = Players.LocalPlayer
-	local toggleButton = script.Parent
-	local loopTP = false
-	
-	local currentTarget = nil
-	local targetStartTime = 0
-	local tpPart = nil
-	local camera = workspace.CurrentCamera
-
-	local function isRagdolled(humanoid)
-		return humanoid.PlatformStand or humanoid:GetState() == Enum.HumanoidStateType.Physics
-	end
-
-	local function getClosestTarget(ignore)
-		local closest = nil
-		local dist = math.huge
-		local myHrp = lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
-		if not myHrp then return nil end
-
-		for _, p in ipairs(Players:GetPlayers()) do
-			if p ~= lp and p ~= ignore and p.Character then
-				local hum = p.Character:FindFirstChildOfClass("Humanoid")
-				local hrp = p.Character:FindFirstChild("HumanoidRootPart")
-				if hum and hrp and hum.Health > 0 then
-					local d = (hrp.Position - myHrp.Position).Magnitude
-					if d < dist then
-						dist = d
-						closest = p
-					end
-				end
-			end
-		end
-		return closest
-	end
-
-	local function doLoopTP()
-		tpPart = Instance.new("Part")
-		tpPart.Size = Vector3.new(1, 1, 1)
-		tpPart.Transparency = 1
-		tpPart.CanCollide = false
-		tpPart.Anchored = true
-		tpPart.Parent = workspace
-
-		while loopTP and toggleButton:IsDescendantOf(game) do
-			RunService.Heartbeat:Wait()
-			if not toggleButton:IsDescendantOf(game) then
-				loopTP = false
-				break
-			end
-			
-			local now = tick()
-			local shouldSwitch = false
-			
-			if currentTarget then
-				local hum = currentTarget.Character and currentTarget.Character:FindFirstChildOfClass("Humanoid")
-				local hrp = currentTarget.Character and currentTarget.Character:FindFirstChild("HumanoidRootPart")
-				
-				if not hum or not hrp or hum.Health <= 0 or isRagdolled(hum) then
-					shouldSwitch = true
-					currentTarget = nil
-				else
-					local speed = hrp.Velocity.Magnitude
-					if speed > 35 or (now - targetStartTime > 1.45) then
-						shouldSwitch = true
-					end
-				end
-			else
-				shouldSwitch = true
-			end
-
-			if shouldSwitch then
-				local oldTarget = currentTarget
-				currentTarget = getClosestTarget(oldTarget)
-				if not currentTarget and oldTarget then
-					local hum = oldTarget.Character and oldTarget.Character:FindFirstChildOfClass("Humanoid")
-					if hum and hum.Health > 0 and not isRagdolled(hum) then
-						currentTarget = oldTarget
-					end
-				end
-				targetStartTime = tick()
-			end
-
-			if currentTarget and currentTarget.Character and currentTarget.Character:FindFirstChild("HumanoidRootPart") then
-				local targetHrp = currentTarget.Character.HumanoidRootPart
-				local targetHum = currentTarget.Character:FindFirstChildOfClass("Humanoid")
-				local myChar = lp.Character
-				local myHrp = myChar and myChar:FindFirstChild("HumanoidRootPart")
-				local myHum = myChar and myChar:FindFirstChildOfClass("Humanoid")
-				
-				if targetHum then
-					camera.CameraSubject = targetHum
-				end
-
-				if myHrp and myHum then
-					myHum.PlatformStand = true
-					local angle = (tick() * 2880) % 360
-					tpPart.CFrame = targetHrp.CFrame * CFrame.Angles(math.rad(angle), 0, 0) * CFrame.new(0, 0, 0.5)
-					myHrp.CFrame = tpPart.CFrame * CFrame.Angles(math.rad(-90), 0, 0)
-				end
-			else
-				local myChar = lp.Character
-				local myHum = myChar and myChar:FindFirstChildOfClass("Humanoid")
-				if myHum then
-					camera.CameraSubject = myHum
-				end
-			end
-		end
-		
-		if tpPart then
-			tpPart:Destroy()
-			tpPart = nil
-		end
-
-		local myChar = lp.Character
-		local myHum = myChar and myChar:FindFirstChildOfClass("Humanoid")
-		if myHum then
-			myHum.PlatformStand = false
-			camera.CameraSubject = myHum
-		end
-	end
-
-	toggleButton.MouseButton1Click:Connect(function()
-		loopTP = not loopTP
-		toggleButton.Text = loopTP and "TP ON" or "TP OFF"
-		if loopTP then
-			currentTarget = nil
-			coroutine.wrap(doLoopTP)()
-		else
-			local myChar = lp.Character
-			local myHum = myChar and myChar:FindFirstChildOfClass("Humanoid")
-			if myHum then
-				camera.CameraSubject = myHum
-			end
-		end
-	end)
-end
-coroutine.wrap(TP_fake_script)()
 
 
--- Rainbow follower: torso-sized marker 7 studs below the local player.
--- An XRay BoxHandleAdornment provides a through-walls visual even if Highlight is occluded.
+-- Grey torso-sized follower with a semi-transparent rainbow fill.
+-- Left-click and hold to move the marker toward the mouse; release to return it 7 studs below the torso.
+-- Visual-only: deliberately does not apply fling forces to other players.
 local function RAINBOW_FOLLOWER_script()
     local Players = game:GetService("Players")
     local RunService = game:GetService("RunService")
     local lp = Players.LocalPlayer
-    local button = RainbowButton
-    -- Start enabled so the marker appears as soon as the script runs.
+    local mouse = lp:GetMouse()
     local enabled = true
+    local isHolding = false
     local marker = nil
     local highlight = nil
     local xrayAdornment = nil
     local connection = nil
+    local hue = 0
+
+    local function getCharacterParts()
+        local character = lp.Character
+        if not character then return nil, nil, nil end
+        local root = character:FindFirstChild("HumanoidRootPart")
+        local torso = character:FindFirstChild("Torso") or character:FindFirstChild("UpperTorso")
+        return character, root, torso
+    end
 
     local function removeMarker()
-        if connection then
-            connection:Disconnect()
-            connection = nil
-        end
-        if highlight then
-            highlight:Destroy()
-            highlight = nil
-        end
-        if xrayAdornment then
-            xrayAdornment:Destroy()
-            xrayAdornment = nil
-        end
-        if marker then
-            marker:Destroy()
-            marker = nil
-        end
+        if connection then connection:Disconnect(); connection = nil end
+        if highlight then highlight:Destroy(); highlight = nil end
+        if xrayAdornment then xrayAdornment:Destroy(); xrayAdornment = nil end
+        if marker then marker:Destroy(); marker = nil end
     end
 
     local function makeMarker()
         removeMarker()
+        local character, root, torso = getCharacterParts()
+        if not character then return end
+
         marker = Instance.new("Part")
-        marker.Name = "RainbowFollowerMarker"
+        marker.Name = "HighlightFlingPart"
         marker.Anchored = true
         marker.CanCollide = false
         marker.CanTouch = false
         marker.CanQuery = false
+        marker.Color = Color3.fromRGB(163, 162, 165)
         marker.Material = Enum.Material.SmoothPlastic
+        marker.Transparency = 0.5
         marker.CastShadow = false
-        -- Make the actual part faint, so its color is visible without looking solid.
-        marker.Transparency = 0.72
-        marker.Size = Vector3.new(2, 2, 1)
+        marker.Size = (torso and torso:IsA("BasePart")) and torso.Size or Vector3.new(2, 2, 1)
         marker.Parent = workspace
 
-        -- Keep the regular highlight for a soft tint and a clear rainbow outline.
         highlight = Instance.new("Highlight")
         highlight.Name = "RainbowFollowerHighlight"
         highlight.Adornee = marker
         highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+        highlight.FillTransparency = 0.5
+        highlight.OutlineTransparency = 1
         highlight.Enabled = true
-        highlight.FillTransparency = 0.88
-        highlight.OutlineTransparency = 0.12
         highlight.Parent = workspace
 
-        -- Use a separate X-ray adornment as the through-walls visual fallback.
+        -- X-ray box is a second, translucent through-walls visual fallback.
         xrayAdornment = Instance.new("BoxHandleAdornment")
         xrayAdornment.Name = "RainbowFollowerXRay"
         xrayAdornment.Adornee = marker
         xrayAdornment.Size = marker.Size
-        xrayAdornment.Transparency = 0.68
+        xrayAdornment.Transparency = 0.5
         xrayAdornment.AlwaysOnTop = true
         xrayAdornment.ZIndex = 5
         xrayAdornment.Shading = Enum.AdornShading.XRay
         xrayAdornment.Parent = workspace
 
-        connection = RunService.RenderStepped:Connect(function()
-            if not enabled or not marker then return end
-            local character = lp.Character
-            local root = character and character:FindFirstChild("HumanoidRootPart")
-            local torso = character and (character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso"))
-            if root then
-                if torso and torso:IsA("BasePart") then
-                    marker.Size = torso.Size
-                else
-                    marker.Size = Vector3.new(2, 2, 1)
-                end
-                -- Center the marker exactly 7 studs below the HumanoidRootPart.
-                marker.CFrame = CFrame.new(root.Position - Vector3.new(0, 7, 0))
-                local hue = (os.clock() * 0.25) % 1
-                local rainbow = Color3.fromHSV(hue, 1, 1)
-                marker.Color = rainbow
-                if highlight then
-                    highlight.FillColor = rainbow
-                    highlight.OutlineColor = Color3.fromHSV((hue + 0.15) % 1, 1, 1)
-                end
-                if xrayAdornment then
-                    xrayAdornment.Size = marker.Size
-                    xrayAdornment.Color3 = rainbow
-                end
+        connection = RunService.RenderStepped:Connect(function(dt)
+            if not enabled or not marker or not marker.Parent then return end
+            local currentCharacter, currentRoot, currentTorso = getCharacterParts()
+            if not currentCharacter or not currentRoot then return end
+            if currentTorso and currentTorso:IsA("BasePart") then
+                marker.Size = currentTorso.Size
+            end
+            if isHolding and mouse and mouse.Hit then
+                marker.CFrame = marker.CFrame:Lerp(CFrame.new(mouse.Hit.Position), 0.5)
+            else
+                local base = currentTorso or currentRoot
+                marker.CFrame = base.CFrame * CFrame.new(0, -7, 0)
+            end
+            hue = (hue + dt * 0.18) % 1
+            local rainbow = Color3.fromHSV(hue, 1, 1)
+            marker.Color = Color3.fromRGB(163, 162, 165)
+            if highlight then highlight.FillColor = rainbow end
+            if xrayAdornment then
+                xrayAdornment.Size = marker.Size
+                xrayAdornment.Color3 = rainbow
             end
         end)
     end
 
-    button.MouseButton1Click:Connect(function()
-        enabled = not enabled
-        button.Text = enabled and "Rainbow ON" or "Rainbow OFF"
-        if enabled then
-            makeMarker()
-        else
-            removeMarker()
-        end
-    end)
+    mouse.Button1Down:Connect(function() isHolding = true end)
+    mouse.Button1Up:Connect(function() isHolding = false end)
+
 
     lp.CharacterAdded:Connect(function()
-        if enabled then
-            task.defer(makeMarker)
-        end
+        if enabled then task.defer(makeMarker) end
     end)
 
-    -- Automatically create the marker on script execution; the button can toggle it off.
-    button.Text = "Rainbow ON"
     makeMarker()
 end
 coroutine.wrap(RAINBOW_FOLLOWER_script)()
 
-local function CHANGELOG_fake_script()
-	local script = Instance.new('LocalScript', ImageButton)
-	local TweenService = game:GetService("TweenService")
-	local btn = script.Parent
-	local open = false
-	
-	btn.MouseButton1Click:Connect(function()
-		open = not open
-		if open then
-			btn.Image = "rbxassetid://10709791281"
-			Frame3.Visible = true
-			TweenService:Create(Frame3, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {GroupTransparency = 0}):Play()
-		else
-			btn.Image = "rbxassetid://10709791437"
-			local tween = TweenService:Create(Frame3, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {GroupTransparency = 1})
-			tween:Play()
-			tween.Completed:Connect(function()
-				if not open then
-					Frame3.Visible = false
-				end
-			end)
-		end
-	end)
-end
-coroutine.wrap(CHANGELOG_fake_script)()
 
-local function HIDE_fake_script()
-	local script = Instance.new('LocalScript', HideButton)
-	local btn = script.Parent
-	
-	btn.MouseButton1Click:Connect(function()
-		Frame.Visible = not Frame.Visible
-		if Frame.Visible then
-			btn.Text = "Hide"
-		else
-			btn.Text = "Show"
-		end
-	end)
-end
-coroutine.wrap(HIDE_fake_script)()
 
 local function QCJQJL_fake_script()
 	local script = Instance.new('LocalScript', Frame)
@@ -555,14 +282,6 @@ local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 local heartbeatConnection = nil
 local stateConnection = nil
-
-pcall(function()
-    StarterGui:SetCore("SendNotification", {
-        Title = "system anti fling loaded",
-        Text = "anti fling has active (Deobfuscation by 118_W (6xow in discord)",
-        Duration = 3.5
-    })
-end)
 
 local function cleanup()
     if heartbeatConnection then
