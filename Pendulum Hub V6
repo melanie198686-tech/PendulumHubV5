@@ -1,0 +1,350 @@
+if not game:IsLoaded() then
+	game.Loaded:Wait()
+end
+getgenv().Reanimation = "PermaDeath"
+
+local Library = loadstring(game:HttpGet("https://bit.ly/3612rxR"))()
+
+local Pendulum = Library.CreateLib("Pendulum Hub")
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+
+-- Tabs (Scripts first = default, then Credits, then Settings)
+local ScriptsTab = Pendulum:NewTab("Scripts", false)
+local CreditsTab = Pendulum:NewTab("Credits", true)
+local SettingsTab = Pendulum:NewTab("Settings", true)
+
+-- Settings
+SettingsTab:NewButton("Touch Fling", "Gives you touch fling", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Touchfling.lua"))()
+end)
+
+SettingsTab:NewButton("Remove Head", "Headless (you won't die, accessories stay visible)", function()
+	local char = Players.LocalPlayer.Character
+	if not char then return end
+	local head = char:FindFirstChild("Head")
+	if head then
+		head.Transparency = 1
+		for _, d in ipairs(head:GetDescendants()) do
+			if d:IsA("Decal") then
+				d.Transparency = 1
+			end
+		end
+	end
+end)
+
+SettingsTab:NewButton("Remove Right Leg", "Korblox", function()
+	local char = Players.LocalPlayer.Character
+	if not char then return end
+	for _, name in ipairs({"Right Leg", "RightUpperLeg", "RightLowerLeg", "RightFoot"}) do
+		local part = char:FindFirstChild(name)
+		if part then
+			part.Transparency = 1
+			for _, d in ipairs(part:GetDescendants()) do
+				if d:IsA("Decal") then
+					d.Transparency = 1
+				end
+			end
+		end
+	end
+end)
+
+-- Script Buttons
+
+ScriptsTab:NewSearchBar()
+ScriptsTab:NewButton("Sonic", "The fastest one of all of them.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Sonic.lua"))()
+end)
+
+ScriptsTab:NewButton("Joy", "DONT CLICK R U HAVE BEEN WARNED.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Joy.lua"))()
+end)
+
+ScriptsTab:NewButton("Killbot V2", "This script kinda sucks lol.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Killbotv2.lua"))()
+end)
+
+ScriptsTab:NewButton("Sniper WIP", "Very buggy i think the most buggy of all of them.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Sniper.lua"))()
+end)
+
+ScriptsTab:NewButton("Edgelord", "I hope this script is called edgelord.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Edgelord.lua"))()
+end)
+
+ScriptsTab:NewButton("Bizzaro", "The T walker???.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Bizzaro.lua"))()
+end)
+
+ScriptsTab:NewButton("Chill", "You can get a lot of peoples attention with this.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Chill.lua"))()
+end)
+
+ScriptsTab:NewButton("Sans", "Such a Sigma.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/FESans.lua"))()
+end)
+
+ScriptsTab:NewButton("Killer", "He will saw off your pp.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Killer.lua"))()
+end)
+
+ScriptsTab:NewButton("Abbys Eye", "I will put that sword in your eye.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Abbys%20Eye.lua"))()
+end)
+
+ScriptsTab:NewButton("Amythest Ninja", "I dont know what to type here.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Amythest%20Ninja.lua"))()
+end)
+
+ScriptsTab:NewButton("Nebula Star Glitcher", "This script was damn 8 years ago.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Nebula%20Star%20Glitcher.lua"))()
+end)
+
+ScriptsTab:NewButton("Zen", "KunFU master.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/FEZen.lua"))()
+end)
+
+ScriptsTab:NewButton("Xester", "The card master this was my first one i fixed.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/xester.lua"))()
+end)
+
+ScriptsTab:NewButton("Internal War WIP", "Not fully done yet.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Internal%20War%20WIP.lua"))()
+end)
+
+ScriptsTab:NewButton("Ether", "This one really likes yellow.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Ether.lua"))()
+end)
+
+ScriptsTab:NewButton("Katarnist", "Hes gonna slice your pp.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Katarnist.lua"))()
+end)
+
+ScriptsTab:NewButton("Neko v4", "HEHE uwu.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov4.lua"))()
+end)
+
+ScriptsTab:NewButton("Neko v5", "v4 but better catgirl.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov5"))()
+end)
+
+ScriptsTab:NewButton("Pen", "Dont buy the hat its ahh anyways.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/FEPen.lua"))()
+end)
+
+ScriptsTab:NewButton("Baldi", "Slap his BALDY AHH.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Baldi.lua"))()
+end)
+
+ScriptsTab:NewButton("SCP-106", "Do not leak... blah blah blah.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/SCP-106.lua"))()
+end)
+
+ScriptsTab:NewButton("Drone", "Flying around with a drone is boring.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Drone.lua"))()
+end)
+
+ScriptsTab:NewButton("Magic", "ALL JUST MAGIC UR SEEING.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Magic.lua"))()
+end)
+
+ScriptsTab:NewButton("Echo Banisher", "Bros such a demon demon.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Echo%20banisher.lua"))()
+end)
+
+ScriptsTab:NewButton("Video Powers", "I expected something better duh.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Video%20Powers.lua"))()
+end)
+
+ScriptsTab:NewButton("The Pacifist", "Pretty lame but its cool.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/The%20Pacifist.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Sword Thing", "Hit people with a metal sword.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Swordthing.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Crazy Rainbow Energy Blade", "wtf is  this shit.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Crazy%20Rainbow%20Energy%20Blade.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Chara", "goofy ahhh.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Chara.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Reaper", "tought it would be something with a sword but i guess...", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Reaper.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Billie", "idk why  tf this is even a thing but okay.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/billie.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Ban Sword", "its actually just ban hammer lol.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Ban%20Sword.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Memeus v2.5", "all of them memes are dead boi that was like 10 years ago", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Memeus.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Krystal dance", "Some nice dances. My favorite is U.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Krystal%20dance.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Minigun", "Have fun spraying skids.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Minigun.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Grappler", "So uh good to escape.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Grappler.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Darth Vadar", "for the star wars fans.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/darthvadar.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Nightmare sans", "left click to fling. time it with attacks to fling.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Nightmaresans.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Sexy Staff Girl", "WITCHHHH.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Sexy%20staff%20girl.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Studio Dummy", "shotgun paoww.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Studio%20dummy.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Road Roudge", "vroom vroom vroom.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Roadrogue.lua"))()
+	end)
+
+	ScriptsTab:NewButton("Chips", "Hit people with chips yea.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Chips.lua"))()
+	end)
+
+
+-- Credits
+
+CreditsTab:NewLabel("Credits to Tescalus#3758 for making the entire hub")
+CreditsTab:NewLabel("Ty ProductionTakeOne#3330 for help with new reanimation")
+CreditsTab:NewLabel("Pendulum hubs very own UI was made by charli#4616")
+CreditsTab:NewLabel("Ty Croaxer for letting us do this")
+CreditsTab:NewLabel("THANKS GRIM REAPER FOR THE TIP")
+CreditsTab:NewLabel("This menu is recreated by ellernate.lol")
+CreditsTab:NewLabel("This menu is recreated by ellernate.lol")
+
+
+CreditsTab:NewButton("\67\111\112\121\32\68\105\115\99\111\114\100\32\73\110\118\105\116\101", "\67\111\112\105\101\115\32\116\104\101\32\105\110\118\105\116\101\46.", function()
+	if setclipboard then
+		setclipboard("\144\151\163\143\157\162\144\056\147\147\057\172\132\112\123\113\160\120\164\143\166")
+	end
+end)
+
+CreditsTab:NewButton("\67\111\112\121\32\76\105\99\101\110\115\101", "\67\111\112\105\101\115\32\116\104\101\32\108\105\99\101\110\115\101\46", function()
+	if setclipboard then
+		setclipboard("\104\116\116\112\115\58\47\47\103\105\116\104\117\98\46\99\111\109\47\83\97\110\99\104\101\122\53\51\49\47\80\101\110\100\117\108\117\109\45\72\117\98\115\45\83\111\117\114\99\101\47\98\108\111\98\47\109\97\105\110\47\76\73\67\69\78\83\69\46\109\100")
+	end
+end)
+
+-- Shift + L Hides Gui
+
+local Enabled = true
+UserInputService.InputBegan:Connect(function(Input,Typing)
+	if Input.KeyCode == Enum.KeyCode.L and not Typing and UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+		Enabled = not Enabled
+		
+		if Enabled == false then
+			Pendulum:Hide()
+		elseif Enabled == true then
+			Pendulum:Show()
+		end
+	end
+end)
