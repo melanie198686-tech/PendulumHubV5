@@ -8,22 +8,20 @@ oh noes we have an http logger skid!!!!!!!!
 
 module = {}
 
--- ===== ORANGE THEME COLORS =====
+-- ===== SOFT ORANGE THEME =====
 local THEME = {
-    Main          = Color3.fromRGB(255, 140, 0),    -- main orange background
-    Panel         = Color3.fromRGB(230, 120, 0),    -- tab panel background
-    Sidebar       = Color3.fromRGB(210, 105, 0),    -- tab buttons sidebar
-    Button        = Color3.fromRGB(255, 150, 20),   -- button base
-    ButtonHover   = Color3.fromRGB(255, 170, 50),   -- button hover
-    ButtonClick   = Color3.fromRGB(255, 180, 70),   -- button pressed
-    ButtonInfo    = Color3.fromRGB(200, 95, 0),     -- button when showing info
-    Stroke        = Color3.fromRGB(160, 75, 0),     -- darker orange stroke
-    StrokeLight   = Color3.fromRGB(180, 85, 0),     -- stroke for smaller elements
-    Text          = Color3.fromRGB(255, 255, 255),  -- white text
-    TextDark      = Color3.fromRGB(60, 25, 0),      -- dark text on light orange
-    Red           = Color3.fromRGB(200, 0, 0),
-    Green         = Color3.fromRGB(0, 240, 0),
-    SearchBg      = Color3.fromRGB(210, 105, 0),
+    Main        = Color3.fromRGB(168, 92, 28),   -- deep warm orange (window bg)
+    Panel       = Color3.fromRGB(148, 80, 22),   -- tab panel bg
+    Sidebar     = Color3.fromRGB(130, 70, 18),   -- tab sidebar bg
+    Button      = Color3.fromRGB(196, 110, 36),  -- button base
+    ButtonHover = Color3.fromRGB(214, 128, 50),  -- button hover
+    ButtonClick = Color3.fromRGB(226, 142, 62),  -- button pressed
+    ButtonInfo  = Color3.fromRGB(160, 88, 26),   -- button when info shown
+    Stroke      = Color3.fromRGB(110, 58, 14),   -- darker orange stroke
+    Text        = Color3.fromRGB(255, 245, 235), -- soft warm white
+    Red         = Color3.fromRGB(190, 60, 50),   -- softer red
+    Green       = Color3.fromRGB(70, 180, 90),   -- softer green
+    SearchBg    = Color3.fromRGB(130, 70, 18),
 }
 -- ===== END THEME =====
 
@@ -87,6 +85,7 @@ function module:New(name)
         Main.Position = UDim2.new(0.341675043, 0, 0.403705865, 0)
         Main.Size = UDim2.new(0, 602, 0, 403)
 	
+        -- Original library stroke on Main, recolored only (not added elsewhere)
         local UIStroke = Instance.new('UIStroke')
         UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         UIStroke.Color = THEME.Stroke
@@ -123,10 +122,6 @@ function module:New(name)
         close.Position = UDim2.new(0.936877131, 0, 0.0148883387, 0)
         close.Size = UDim2.new(0, 25, 0, 25)
         close.Image = "http://www.roblox.com/asset/?id=6236220207"
-        local closeStroke = Instance.new("UIStroke", close)
-        closeStroke.Color = THEME.Stroke
-        closeStroke.Thickness = 1.5
-        closeStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
         close.MouseButton1Click:Connect(function()
             ScreenGui:Destroy()
@@ -139,10 +134,6 @@ function module:New(name)
         min.Position = UDim2.new(0.877076447, 0, 0.0148883387, 0)
         min.Size = UDim2.new(0, 25, 0, 25)
         min.Image = "rbxassetid://8836139185"
-        local minStroke = Instance.new("UIStroke", min)
-        minStroke.Color = THEME.Stroke
-        minStroke.Thickness = 1.5
-        minStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
 		local footer = Instance.new("TextLabel")
 		footer.Parent = Main
@@ -164,10 +155,6 @@ function module:New(name)
 		avatar.BackgroundTransparency = 1
 		avatar.Image = game.Players:GetUserThumbnailAsync(game.Players.LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48)
 		Instance.new('UICorner', avatar).CornerRadius = UDim.new(0, 20)
-		local avatarStroke = Instance.new("UIStroke", avatar)
-		avatarStroke.Color = THEME.Stroke
-		avatarStroke.Thickness = 2
-		avatarStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 		end)()
 
         local tabbuttons = Instance.new("ScrollingFrame")
@@ -181,10 +168,6 @@ function module:New(name)
         tabbuttons.BorderSizePixel = 0
         tabbuttons.Position = UDim2.new(0, 0, 0.0918114111, 0)
         tabbuttons.Size = UDim2.new(0, 182, 0, 320)
-        local tabSidebarStroke = Instance.new("UIStroke", tabbuttons)
-        tabSidebarStroke.Color = THEME.Stroke
-        tabSidebarStroke.Thickness = 2
-        tabSidebarStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
         local padding = Instance.new("UIPadding")
         padding.PaddingTop = UDim.new(0, 0)
@@ -276,10 +259,6 @@ function module:New(name)
             Tab.Position = UDim2.new(0.302325577, 0, 0.0918114111, 0)
             Tab.Size = UDim2.new(0, 420, 0, 320)
             Tab.Visible = false
-            local TabStroke = Instance.new("UIStroke", Tab)
-            TabStroke.Color = THEME.Stroke
-            TabStroke.Thickness = 2
-            TabStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
 			local currenttab = Instance.new("TextLabel")
 			currenttab.Parent = Tab
@@ -306,10 +285,6 @@ function module:New(name)
             tabbutton.TextColor3 = THEME.Text
             tabbutton.TextSize = 17.000
 			tabbutton.AutoButtonColor = false
-			local tabBtnStroke = Instance.new("UIStroke", tabbutton)
-			tabBtnStroke.Color = THEME.Stroke
-			tabBtnStroke.Thickness = 1.5
-			tabBtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
 			tabbutton.MouseEnter:Connect(function()
 				tween(tabbutton,TweenInfo.new(0.4,Enum.EasingStyle.Linear),{BackgroundColor3 = THEME.ButtonHover})
@@ -391,10 +366,6 @@ function module:New(name)
                 label.TextSize = 14.000
                 UICorner_3.CornerRadius = UDim.new(0, 5)
                 UICorner_3.Parent = label
-                local labelStroke = Instance.new("UIStroke", label)
-                labelStroke.Color = THEME.Stroke
-                labelStroke.Thickness = 1.5
-                labelStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
                 ScrollingFrame.CanvasSize = UDim2.fromOffset(ScrollingFrame.CanvasSize.X.Offset,ScrollingFrame.CanvasSize.Y.Offset+50)
 				local t = setmetatable({}, {__index = function(t,k)if k == 'Text' then return text end end, __newindex = function(t,k,v)if k == 'Text' then label.Text = v; text = v end end})
 				return t
@@ -416,10 +387,6 @@ function module:New(name)
                 SearchBar.Text = ""
                 SearchBar.TextColor3 = THEME.Text
                 SearchBar.TextSize = 20.000
-                local searchStroke = Instance.new("UIStroke", SearchBar)
-                searchStroke.Color = THEME.Stroke
-                searchStroke.Thickness = 1.5
-                searchStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
                 local searchicon = Instance.new("ImageLabel")
 
@@ -467,11 +434,6 @@ function module:New(name)
                 butcorner.CornerRadius = UDim.new(0, 5)
                 butcorner.Name = "butcorner"
                 butcorner.Parent = button
-
-                local btnStroke = Instance.new("UIStroke", button)
-                btnStroke.Color = THEME.Stroke
-                btnStroke.Thickness = 1.5
-                btnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
                 local infobutton = Instance.new("ImageButton")
 
@@ -536,11 +498,6 @@ function module:New(name)
                 butcorner.CornerRadius = UDim.new(0, 5)
                 butcorner.Name = "butcorner"
                 butcorner.Parent = button
-
-                local boolStroke = Instance.new("UIStroke", button)
-                boolStroke.Color = THEME.Stroke
-                boolStroke.Thickness = 1.5
-                boolStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
                 local infobutton = Instance.new("ImageButton")
 
@@ -623,11 +580,6 @@ function module:New(name)
                 butcorner.Name = "butcorner"
                 butcorner.Parent = button
 
-                local textStroke = Instance.new("UIStroke", button)
-                textStroke.Color = THEME.Stroke
-                textStroke.Thickness = 1.5
-                textStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
                 local infobutton = Instance.new("ImageButton")
 
                 infobutton.Name = "infobutton"
@@ -649,7 +601,7 @@ function module:New(name)
 				box.Position = UDim2.new(0, 40, 0, 3.5)
 				box.Font = Enum.Font.Roboto
 				box.PlaceholderText = name
-				box.PlaceholderColor3 = Color3.fromRGB(255, 220, 180)
+				box.PlaceholderColor3 = Color3.fromRGB(220, 190, 160)
 				box.Text = defval and defval or ''
 				box.TextXAlignment = Enum.TextXAlignment.Left
 				box.TextSize = 17.000
@@ -669,10 +621,6 @@ function module:New(name)
 				boxcorner.CornerRadius = UDim.new(0,5)
 				local boxpad = Instance.new("UIPadding",box)
 				boxpad.PaddingLeft = UDim.new(0,10)
-				local boxStroke = Instance.new("UIStroke", box)
-				boxStroke.Color = THEME.Stroke
-				boxStroke.Thickness = 1.5
-				boxStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
 				local tab = {}
 				function tab:GetText()
@@ -713,10 +661,6 @@ function module:New(name)
 		bar.Transparency = 1
 		local crn = Instance.new("UICorner", bar)
 		crn.CornerRadius = UDim.new(0, 10)
-		local barStroke = Instance.new("UIStroke", bar)
-		barStroke.Color = THEME.Stroke
-		barStroke.Thickness = 2
-		barStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 		local command = Instance.new("TextBox", bar)
 		command.Size = UDim2.new(0, bar.Size.X.Offset-15, 0, 40)
 		command.Position = UDim2.new(0, 6, 0, 6)
@@ -727,7 +671,7 @@ function module:New(name)
 		command.BackgroundTransparency = 1
 		command.Text = ''
 		command.TextColor3 = THEME.Text
-		command.PlaceholderColor3 = Color3.fromRGB(255, 220, 180)
+		command.PlaceholderColor3 = Color3.fromRGB(220, 190, 160)
 		command.Transparency = 1
 
 		local cmds = Instance.new('ScrollingFrame', folder)
@@ -822,10 +766,6 @@ function module:New(name)
 			thinggy.Visible = false
 			local crn = Instance.new("UICorner", thinggy)
 			crn.CornerRadius = UDim.new(0, 5)
-			local cmdStroke = Instance.new("UIStroke", thinggy)
-			cmdStroke.Color = THEME.Stroke
-			cmdStroke.Thickness = 1.5
-			cmdStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 			local namee = Instance.new('TextLabel', thinggy)
 			namee.Size = UDim2.new(0, thinggy.Size.X.Offset-15, 0, 30)
 			namee.Position = UDim2.new(0,10,0,0)
