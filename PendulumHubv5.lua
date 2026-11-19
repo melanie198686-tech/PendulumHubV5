@@ -113,6 +113,12 @@ do -- ScriptsTab Buttons
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Killer.lua"))()
 	end)
 
+	ScriptsTab:NewButton("Gentleman Killbot", "only hitting anim.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Gentleman%20Killbot.lua"))()
+	end)
+
 	ScriptsTab:NewButton("Amythest Ninja", "So this one is rlly buggy i tried it okaay.", function()
 		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
