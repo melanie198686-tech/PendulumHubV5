@@ -160,6 +160,12 @@ ScriptsTab:NewButton("Ether", "This one really likes yellow.", function()
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Ether.lua"))()
 end)
 
+ScriptsTab:NewButton("AK 47", "Wait before equipting it.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/AK47.lua"))()
+end)
+
 ScriptsTab:NewButton("Katarnist", "Hes gonna slice your pp.", function()
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
