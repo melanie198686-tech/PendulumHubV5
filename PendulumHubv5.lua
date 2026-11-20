@@ -149,6 +149,12 @@ ScriptsTab:NewButton("Vape", "Smoke with a vape.", function()
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Vape.lua"))()
 end)
 
+ScriptsTab:NewButton("Demonic Sword", "Ur hair is bugged out i didnt fix i was lazy .", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Demonic%20Sword.lua"))()
+end)
+
 ScriptsTab:NewButton("Dragonian Pyramus.lua", "Sin dragon.", function()
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
