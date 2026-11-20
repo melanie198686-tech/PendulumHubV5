@@ -149,6 +149,12 @@ ScriptsTab:NewButton("The Warden", "He likes purple/pink.", function()
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/The%20Warden.lua"))()
 end)
 
+ScriptsTab:NewButton("Groundbreaker Gauntlets", "Gauntlets of death.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Groundbreaker%20Gauntlets.lua"))()
+end)
+
 ScriptsTab:NewButton("Vape", "Smoke with a vape.", function()
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
