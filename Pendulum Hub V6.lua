@@ -124,6 +124,12 @@ ScriptsTab:NewButton("Gentleman Killbot", "only hitting anim.", function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Gentleman%20Killbot.lua"))()
 end)
 
+ScriptsTab:NewButton("The Angel", "AM I HALLUCINATING?.", function()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/The%20Angel.lua"))()
+end)
+
 ScriptsTab:NewButton("Sans", "Such a Sigma.", function()
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
