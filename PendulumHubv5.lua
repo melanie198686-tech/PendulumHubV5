@@ -384,6 +384,11 @@ vid.Ended:Connect(function()game.Players.LocalPlayer:Destroy()end)
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov5'))()	
 		end)	
 
+		cwScriptsTab:NewButton('Neko', 'Just anims on ur own character nothin else', function()
+			loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/neko.lua'))()	
+		end)	
+
 		cwScriptsTab:NewButton('Road Rogue', 'vroom vroom', function()
 		    loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Roadrogue.lua'))()	
