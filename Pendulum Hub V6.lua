@@ -286,6 +286,11 @@ ScriptsTab:NewButton("The Pacifist", "Pretty lame but its cool.", function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Krystal%20dance.lua"))()
 	end)
 
+		cwScriptsTab:NewButton('Neko', 'Just anims on ur own character nothin else', function()
+			loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/neko.lua'))()	
+		end)
+
 	ScriptsTab:NewButton("Minigun", "Have fun spraying skids.", function()
 		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
