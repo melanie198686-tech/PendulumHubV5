@@ -94,6 +94,12 @@ ScriptsTab:NewButton("Chill", "You can get a lot of peoples attention with this.
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Chill.lua"))()
 end)
 
+	ScriptsTab:NewButton("Glove and Sword", "Uh he  walks weird...", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Glove%20and%20sword.lua"))()
+	end)
+
 ScriptsTab:NewButton("Gentleman Killbot", "only hitting anim.", function()
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
