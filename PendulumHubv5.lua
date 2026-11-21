@@ -17,7 +17,7 @@ Blur.Size = 1
 local Camera = workspace.CurrentCamera
 
 Global._reanimate = loadstring(game:HttpGet('https://raw.githubusercontent.com/shidemuri/coffeeware/main/reanim.lua'))()
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/newgui%20theme.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/shidemuri/scripts/main/ui_lib.lua"))()
 
 if not game:IsLoaded() then game.Loaded:Wait() end
 
