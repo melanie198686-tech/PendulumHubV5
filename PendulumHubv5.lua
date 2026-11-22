@@ -311,7 +311,7 @@ end)
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Grappler.lua"))()
 	end)
 
-	cwScriptsTab:NewButton('Neko animations V3', 'v4 but  better animations', function()
+	ScriptsTab:NewButton('Neko animations V3', 'v4 but  better animations', function()
 		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 		loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov5'))()	
 	end)
@@ -328,7 +328,7 @@ end)
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Nightmaresans.lua"))()
 	end)
 
-	cwScriptsTab:NewButton('Neko animations V2', 'Uh little buggy animations', function()
+	ScriptsTab:NewButton('Neko animations V2', 'Uh little buggy animations', function()
 		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 		loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov4.lua'))()
 	end)
@@ -431,12 +431,12 @@ vid.Ended:Connect(function()game.Players.LocalPlayer:Destroy()end)
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov4.lua'))()
 		end)
 		
-		cwScriptsTab:NewButton('Neko V5', 'v4 but  better animations', function()
+		cwScriptsTab:NewButton('Neko V5', 'v4 but better catgirl', function()
 			loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
-			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov5'))()	
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov5.lua'))()	
 		end)	
 
-		cwScriptsTab:NewButton('Neko', 'Just anims on ur own character nothin else', function()
+		cwScriptsTab:NewButton('Neko Animations', 'Just anims on ur own character nothin else', function()
 			loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/neko.lua'))()	
 		end)	
@@ -460,7 +460,7 @@ vid.Ended:Connect(function()game.Players.LocalPlayer:Destroy()end)
 	
 	do -- Pendelum
 		Pendulum:SetMainTab(CreditsTab)
-		Pendulum:SetFooter('Current version: V4')
+		Pendulum:SetFooter('Current version: V5')
 	end
 	
 	CoreGui:WaitForChild("ScreenGui").Name = "Pendulum Hub"
