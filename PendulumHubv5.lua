@@ -434,7 +434,12 @@ vid.Ended:Connect(function()game.Players.LocalPlayer:Destroy()end)
 		cwScriptsTab:NewButton('Neko V5', 'v4 but better catgirl', function()
 			loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov5.lua'))()	
-		end)	
+		end)
+
+		cwScriptsTab:NewButton('Neko V6', 'v5 but better everthing its just cuter', function()
+			loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Nekov6.lua'))()	
+		end)
 
 		cwScriptsTab:NewButton('Neko Animations', 'Just anims on ur own character nothin else', function()
 			loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
