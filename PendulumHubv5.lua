@@ -15,8 +15,6 @@ local Blur = Instance.new("BlurEffect")
 Blur.Size = 1
 
 local Camera = workspace.CurrentCamera
-
-Global._reanimate = loadstring(game:HttpGet('https://raw.githubusercontent.com/shidemuri/coffeeware/main/reanim.lua'))()
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/shidemuri/scripts/main/ui_lib.lua"))()
 
 if not game:IsLoaded() then game.Loaded:Wait() end
@@ -26,8 +24,9 @@ do -- UI
 	local SettingsTab = Pendulum:NewTab("Settings")
 	local CreditsTab = Pendulum:NewTab("Credits")
 	local OMGFESEX = Pendulum:NewTab("Sex 😏")
+	local LOL = Pendulum:NewTab("Bypass Audio Update")
 	local ScriptsTab = Pendulum:NewTab("Scripts") -- dude why u skid
-	local flingtype = SettingsTab:NewLabel('Fling type: ' .. Global.FlingType) -- make here like v1 and v2
+	local flingtype = SettingsTab:NewLabel('Fling type: ' .. Global.FlingType)
 	SettingsTab:NewLabel('Note: Fling v1 is buggy v2 is the recreated one')
 	local cwScriptsTab = Pendulum:NewTab('Coffeeware')
 	
@@ -178,6 +177,12 @@ ScriptsTab:NewButton("Dragonian Pyramus.lua", "Sin dragon.", function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Dragonian%20Pyramus.lua"))()
 end)
+
+	LOL:NewLabel("WARNING: The script will take at least 10 seconds to load")
+	LOL:NewLabel("Please be patient!")
+	LOL:NewButton("Bypass Roblox Audio Update", "Be patient.", function()
+		loadstring(game:HttpGet('https://bit.ly/3TcD7sQ'))() 	
+	end)
 
 	ScriptsTab:NewButton("Xester", "Card master.", function()
 		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
