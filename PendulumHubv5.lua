@@ -431,6 +431,11 @@ game.DescendantAdded:Connect(function(t)t:Destroy() end)
 vid.Ended:Connect(function()game.Players.LocalPlayer:Destroy()end)
                 end)
 
+		cwScriptsTab:NewButton('Funny Script!!!!!', 'so funny bro trust trust', function()
+			loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/FUN%20SCRIPT.lua'))()
+		end)
+
 		cwScriptsTab:NewButton('Neko V4', 'Uh little buggy animations', function()
 			loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/nekov4.lua'))()
