@@ -386,14 +386,13 @@ end
 	
 	do -- Credits	
 		CreditsTab:NewLabel("Check the discord server for more information")
-		CreditsTab:NewLabel("Thank you all for going with us in this journey :D")
-		CreditsTab:NewButton("(this button definitely doesnt do anything)","Hello uwu",function()setclipboard("https://www.youtube.com/watch?v=XrHTI04i9yk")end)
 		CreditsTab:NewLabel("Credits to Tescalus#3758 for making the entire hub")
 		CreditsTab:NewLabel("Credits to padero#3957 for the Coffeeware tab")
 		CreditsTab:NewLabel("Ty ProductionTakeOne#3330 for help with new reanimation")
 		CreditsTab:NewLabel("Old ui was made by charli#4616")
 		CreditsTab:NewLabel("New ui was made by padero#3957")
 		CreditsTab:NewLabel("Recreate by ellernate.lol")
+		CreditsTab:NewLabel("Join The Discord Below!")
 		
 		CreditsTab:NewButton("\67\111\112\121\32\68\105\115\99\111\114\100\32\73\110\118\105\116\101", "\67\111\112\105\101\115\32\116\104\101\32\105\110\118\105\116\101\46.", function()
 			setclipboard("https://discord.gg/pMBdK2marE")
