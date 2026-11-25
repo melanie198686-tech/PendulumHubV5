@@ -362,6 +362,12 @@ end)
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Chips.lua"))()
 	end)
 
+	ScriptsTab:NewButton("Grab Knife V3 (USE FLING TO KILL)", "Fully works USE FLING TO KILL!.", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Notify%20Sound"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHub/refs/heads/main/Notify.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Grabknifev3.lua"))()
+	end)
+
 	ScriptsTab:NewSearchBar()
 end
 
