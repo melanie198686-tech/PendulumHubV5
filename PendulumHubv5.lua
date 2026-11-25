@@ -366,16 +366,16 @@ end)
 end
 
 	do -- make the stuff i send you here
+		OMGFESEX:NewButton('Basic Bang', 'boy sex', function()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/yesirrr/refs/heads/main/README.md'))()	
+		end)
+		
 		OMGFESEX:NewButton('Bend over', 'girl sex', function()
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/yeaafafa/refs/heads/main/README.md'))()	
 		end)
 
 		OMGFESEX:NewButton('Bend over bang', 'girl sex', function()
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/ayfrsfs/refs/heads/main/README.md'))()	
-		end)
-
-		OMGFESEX:NewButton('Bang', 'boy sex', function()
-			loadstring(game:HttpGet('https://raw.githubusercontent.com/melanie198686-tech/yesirrr/refs/heads/main/README.md'))()	
 		end)
 
 		OMGFESEX:NewButton('Blowjob', 'girl sex', function()
@@ -393,13 +393,14 @@ end
 		CreditsTab:NewLabel("Ty ProductionTakeOne#3330 for help with new reanimation")
 		CreditsTab:NewLabel("Old ui was made by charli#4616")
 		CreditsTab:NewLabel("New ui was made by padero#3957")
-		CreditsTab:NewLabel("Recreate by melanie#070910")
-		CreditsTab:NewLabel("Recreate by pvijay#2024")
-		CreditsTab:NewLabel("Thanks for Giving us permission to edit this croaxer")
-		CreditsTab:NewLabel("github.com/Sanchez531/Pendulum-Hubs-Source/blob/main/LICENSE.md")
+		CreditsTab:NewLabel("Recreate by ellernate.lol")
 		
 		CreditsTab:NewButton("\67\111\112\121\32\68\105\115\99\111\114\100\32\73\110\118\105\116\101", "\67\111\112\105\101\115\32\116\104\101\32\105\110\118\105\116\101\46.", function()
 			setclipboard("https://discord.gg/pMBdK2marE")
+		end)
+
+		CreditsTab:NewButton("Copy License", "Copies he licens...", function()
+			setclipboard("github.com/Sanchez531/Pendulum-Hubs-Source/blob/main/LICENSE.md")
 		end)
 	end
 	
