@@ -42,8 +42,12 @@ do -- UI
 	end)
 	
 	do -- Reanimation Setting
-	SettingsTab:NewButton("CLICK THIS TO GET FLING!", "Yesirrr finnally a flinggg", function()
+	SettingsTab:NewButton("Pendulum fling NEW", "New fling", function()
 		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Touchfling.lua"))()
+	end)
+
+	SettingsTab:NewButton("Old Fling", "Old fling fling", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/oldflingtouch"))()
 	end)
 		SettingsTab:NewButton("Toggle Fling Type", "Fling v1 / Fling v2 / Nothing", function()
 			if Global.FlingType == 'Nothing' then
