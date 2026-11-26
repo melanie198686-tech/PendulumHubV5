@@ -1,0 +1,356 @@
+local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local oldGui = PlayerGui:FindFirstChild("TouchFlingRemakeGui")
+if oldGui then
+	oldGui:Destroy()
+end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "TouchFlingRemakeGui"
+local Frame = Instance.new("Frame")
+local Frame_2 = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+local TextDesc = Instance.new("TextLabel")
+local TextButton = Instance.new("TextButton")
+local ShowButton = Instance.new("TextButton")
+local CornerShowButton = Instance.new("UICorner")
+
+local CornerFrame = Instance.new("UICorner")
+local CornerHeader = Instance.new("UICorner")
+
+local StrokeFrame = Instance.new("UIStroke")
+
+ScreenGui.Parent = PlayerGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.ResetOnSpawn = false
+
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BorderSizePixel = 0
+Frame.Position = UDim2.new(0.388539821, 0, 0.427821517, 0)
+Frame.Size = UDim2.new(0, 158, 0, 110)
+
+CornerFrame.CornerRadius = UDim.new(0, 8)
+CornerFrame.Parent = Frame
+
+StrokeFrame.Color = Color3.fromRGB(50, 50, 50)
+StrokeFrame.Thickness = 1.5
+StrokeFrame.Parent = Frame
+
+Frame_2.Parent = Frame
+Frame_2.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Frame_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Frame_2.BorderSizePixel = 0
+Frame_2.Size = UDim2.new(0, 158, 0, 30)
+
+CornerHeader.CornerRadius = UDim.new(0, 8)
+CornerHeader.Parent = Frame_2
+
+TextLabel.Parent = Frame_2
+TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BackgroundTransparency = 1.000
+TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.BorderSizePixel = 0
+TextLabel.Position = UDim2.new(0, 5, 0, 1)
+TextLabel.Size = UDim2.new(0, 120, 0, 15)
+TextLabel.Font = Enum.Font.Sarpanch
+TextLabel.Text = "the Touch Fling"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 25.000
+TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+TextLabel.TextScaled = true
+
+TextDesc.Parent = Frame_2
+TextDesc.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextDesc.BackgroundTransparency = 1.000
+TextDesc.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextDesc.BorderSizePixel = 0
+TextDesc.Position = UDim2.new(0, 5, 0, 16)
+TextDesc.Size = UDim2.new(0, 120, 0, 11)
+TextDesc.Font = Enum.Font.SourceSans
+TextDesc.Text = "Pendulum hub fling"
+TextDesc.TextColor3 = Color3.fromRGB(200, 200, 200)
+TextDesc.TextSize = 12.000
+TextDesc.TextXAlignment = Enum.TextXAlignment.Left
+TextDesc.TextScaled = true
+TextDesc.TextWrapped = true
+
+TextButton.Parent = Frame
+TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.BorderColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.BorderSizePixel = 0
+TextButton.Position = UDim2.new(0, 18, 0, 43)
+TextButton.Size = UDim2.new(0, 121, 0, 35)
+TextButton.Font = Enum.Font.SourceSansItalic
+TextButton.Text = "FLING OFF"
+TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.TextSize = 20.000
+
+ShowButton.Name = "ShowButton"
+ShowButton.Parent = ScreenGui
+ShowButton.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+ShowButton.BorderSizePixel = 0
+ShowButton.Position = UDim2.new(0, 12, 1, -46)
+ShowButton.Size = UDim2.new(0, 78, 0, 34)
+ShowButton.Font = Enum.Font.Sarpanch
+ShowButton.Text = "HIDE"
+ShowButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ShowButton.TextSize = 17
+ShowButton.AutoButtonColor = true
+ShowButton.ZIndex = 100
+
+CornerShowButton.CornerRadius = UDim.new(0, 7)
+CornerShowButton.Parent = ShowButton
+
+ShowButton.MouseButton1Click:Connect(function()
+    Frame.Visible = not Frame.Visible
+    ShowButton.Text = Frame.Visible and "HIDE" or "SHOW"
+end)
+
+local function IIMAWH_fake_script()
+	local script = Instance.new('LocalScript', TextButton)
+	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+	local RunService = game:GetService("RunService")
+	local Players = game:GetService("Players")
+	
+	local toggleButton = script.Parent
+	local hiddenfling = false
+	if not ReplicatedStorage:FindFirstChild("juisdfj0i32i0eidsuf0iok") then
+		local detection = Instance.new("Decal")
+		detection.Name = "juisdfj0i32i0eidsuf0iok"
+		detection.Parent = ReplicatedStorage
+	end
+	
+	local function fling()
+		local lp = Players.LocalPlayer
+		while hiddenfling and toggleButton:IsDescendantOf(game) do
+			RunService.Heartbeat:Wait()
+			if not toggleButton:IsDescendantOf(game) then break end
+			local c = lp.Character
+			local hrp = c and c:FindFirstChild("HumanoidRootPart")
+			for _, player in ipairs(Players:GetPlayers()) do
+				if player ~= lp and player.Character then
+					for _, part in ipairs(player.Character:GetDescendants()) do
+						if part:IsA("BasePart") then part.CanCollide = false end
+					end
+				end
+			end
+			if hrp then
+				local vel = hrp.Velocity
+				hrp.Velocity = vel * 10000 + Vector3.new(0, 10000, 0)
+				RunService.RenderStepped:Wait()
+				hrp.Velocity = vel
+				RunService.Stepped:Wait()
+				hrp.Velocity = vel + Vector3.new(0, 0.1, 0)
+			end
+		end
+	end
+	
+	toggleButton.MouseButton1Click:Connect(function()
+		hiddenfling = not hiddenfling
+		toggleButton.Text = hiddenfling and "FLING ON" or "FLING OFF"
+		if hiddenfling then coroutine.wrap(fling)() end
+	end)
+end
+coroutine.wrap(IIMAWH_fake_script)()
+
+local function QCJQJL_fake_script()
+	local script = Instance.new('LocalScript', Frame)
+	script.Parent.Active = true
+	script.Parent.Draggable = true
+end
+coroutine.wrap(QCJQJL_fake_script)()
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+local camera = workspace.CurrentCamera
+
+-- =====================================================================
+-- THE GREY SPINNING PART + TELEPORT LOGIC
+-- =====================================================================
+
+local SPIN_SPEED = 25
+local CLICK_RANGE = 25
+local HOLD_DURATION = 1
+local GREY_PART_NAME = "LunyxSpinner"
+
+local isActive = false
+local currentAngle = 0
+
+local function getRoot()
+    local char = LocalPlayer.Character
+    if not char then return nil end
+    return char:FindFirstChild("HumanoidRootPart")
+end
+
+local function getTorso()
+    local char = LocalPlayer.Character
+    if not char then return nil end
+    return char:FindFirstChild("Torso") or char:FindFirstChild("UpperTorso")
+end
+
+local function removeAllSpinners()
+    local char = LocalPlayer.Character
+    if char then
+        for _, obj in ipairs(char:GetDescendants()) do
+            if obj.Name == GREY_PART_NAME then obj:Destroy() end
+        end
+    end
+    for _, obj in ipairs(workspace:GetChildren()) do
+        if obj.Name == GREY_PART_NAME then obj:Destroy() end
+    end
+end
+
+-- Skips the spinner so it stays visible while your body goes invisible
+local function setCharacterVisibility(visible)
+    local char = LocalPlayer.Character
+    if not char then return end
+    for _, part in ipairs(char:GetDescendants()) do
+        if part.Name == GREY_PART_NAME then continue end
+        if part:IsA("BasePart") or part:IsA("Decal") then
+            part.Transparency = visible and 0 or 1
+        end
+    end
+end
+
+local function createSpinner()
+    local char = LocalPlayer.Character
+    local torso = getTorso()
+    if not char or not torso then return end
+
+    removeAllSpinners()
+
+    local part = Instance.new("Part")
+    part.Name = GREY_PART_NAME
+    part.Size = torso.Size
+    part.Color = Color3.fromRGB(163, 162, 165) -- Normal Grey
+    part.Material = Enum.Material.SmoothPlastic
+    part.Anchored = true
+    part.CanCollide = false
+    part.CanQuery = false
+    part.CanTouch = false
+    part.Massless = true
+    part.CFrame = torso.CFrame
+    part.Parent = char
+
+    RunService.RenderStepped:Connect(function(dt)
+        if not part or not part.Parent then return end
+        local t = getTorso()
+        if not t then return end
+        
+        currentAngle = currentAngle + (SPIN_SPEED * dt)
+        part.CFrame = t.CFrame * CFrame.Angles(currentAngle, 0, currentAngle)
+    end)
+end
+
+local function findNearestPlayer()
+    local myRoot = getRoot()
+    if not myRoot then return nil end
+
+    local myPos = myRoot.Position
+    local nearest = nil
+    local nearestDist = CLICK_RANGE
+
+    for _, other in ipairs(Players:GetPlayers()) do
+        if other == LocalPlayer then continue end
+        local otherChar = other.Character
+        if not otherChar then continue end
+        local otherRoot = otherChar:FindFirstChild("HumanoidRootPart")
+        if not otherRoot then continue end
+        local otherHum = otherChar:FindFirstChildOfClass("Humanoid")
+        if otherHum and otherHum.Health <= 0 then continue end
+
+        local dist = (otherRoot.Position - myPos).Magnitude
+        if dist <= nearestDist then
+            nearestDist = dist
+            nearest = otherRoot
+        end
+    end
+
+    return nearest
+end
+
+local function executeTeleport(targetRoot)
+    if isActive then return end
+    local myChar = LocalPlayer.Character
+    local myRoot = getRoot()
+    if not myChar or not myRoot or not targetRoot then return end
+
+    isActive = true
+
+    local savedCFrame = myRoot.CFrame
+    local savedCameraCFrame = camera.CFrame
+    local savedCameraType = camera.CameraType
+
+    -- Lock camera at current position
+    camera.CameraType = Enum.CameraType.Scriptable
+    camera.CFrame = savedCameraCFrame
+
+    -- Turn invisible
+    setCharacterVisibility(false)
+
+    myRoot.CFrame = targetRoot.CFrame
+
+    local followConn
+    followConn = RunService.RenderStepped:Connect(function()
+        if not myRoot.Parent or not targetRoot.Parent then return end
+        myRoot.CFrame = targetRoot.CFrame
+        
+        -- Force invisibility
+        for _, part in ipairs(myChar:GetDescendants()) do
+            if part.Name == GREY_PART_NAME then continue end
+            if part:IsA("BasePart") or part:IsA("Decal") then
+                part.Transparency = 1
+            end
+        end
+    end)
+
+    task.wait(HOLD_DURATION)
+
+    if followConn then followConn:Disconnect() end
+
+    -- Teleport back
+    if myRoot and myRoot.Parent then
+        myRoot.CFrame = savedCFrame
+    end
+
+    -- Turn visible
+    setCharacterVisibility(true)
+
+    -- Restore camera
+    camera.CameraType = savedCameraType
+    camera.CFrame = savedCameraCFrame
+
+    isActive = false
+end
+
+UserInputService.InputBegan:Connect(function(input, processed)
+    if processed then return end
+    if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
+    if isActive then return end
+
+    local targetRoot = findNearestPlayer()
+    if targetRoot then
+        executeTeleport(targetRoot)
+    end
+end)
+
+local hasSpawned = false
+LocalPlayer.CharacterAdded:Connect(function(char)
+    removeAllSpinners() 
+    if not hasSpawned then
+        hasSpawned = true
+        task.wait(0.5)
+        createSpinner()
+    end
+end)
+
+if LocalPlayer.Character then
+    if not hasSpawned then
+        hasSpawned = true
+        task.wait(0.5)
+        createSpinner()
+    end
+end
