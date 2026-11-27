@@ -49,6 +49,10 @@ do -- UI
 	SettingsTab:NewButton("Old Fling", "Old fling fling", function()
 		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/oldflingtouch"))()
 	end)
+
+	SettingsTab:NewButton("Verify Badge", "Client Sided Verify badge", function()
+		loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/melanie198686-tech/PendulumHubV5/refs/heads/main/Client%20sided%20Verify%20badge.lua"))()
+	end)
 		SettingsTab:NewButton("Toggle Fling Type", "Fling v1 / Fling v2 / Nothing", function()
 			if Global.FlingType == 'Nothing' then
 				Global.FlingType = 'Fling v1'
